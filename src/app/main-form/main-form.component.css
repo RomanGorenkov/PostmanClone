@@ -1,0 +1,29 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+.myForm__input-section{
+  display: flex;
+  width: 80%;
+  margin: 5px 20px;
+}
+
+.myForm__input-container{
+  display: flex;
+  width: 60%;
+}
+
+.myForm-container__drop-down-menu{
+  width: 120px;
+  border-radius: 0;
+}
+
+.myForm__input{
+  width: 80%;
+}
+
+.myForm__input-number{
+  width: 20%;
+}
+
+.myForm__save-button{
+  margin: 0 20px;
+}

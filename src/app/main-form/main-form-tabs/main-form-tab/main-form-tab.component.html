@@ -1,0 +1,25 @@
+<section [formGroup]="myForm" class="tab-container">
+    <span class="tab__label">{{tabName}}</span>
+
+    <section *ngIf="condition">
+        <span>Input title</span>
+        <input class="tab__input-key tab__input" name="inputKey" formControlName="requestKey" autocomplete="off" />
+    </section>
+
+
+    <table cellpadding="4" cellspacing="1" class="tab__table">
+        <tr>
+          <th class="tab__table-cell check-mark-colum"></th>
+          <th class="tab__table-cell">KEY</th>
+          <th class="tab__table-cell">VALUE</th>
+          <th class="tab__table-cell">DESCRIPTION</th>
+        </tr>
+        <tr>
+          <td class="tab__table-cell"><input type="checkbox" autocomplete="off"></td>
+          <td class="tab__table-cell"><input class="tab__input-key tab__input" name="inputKey" formControlName="requestKey" autocomplete="off" /></td>
+          <td class="tab__table-cell"><input class="tab__input-value tab__input" name="inputValue" formControlName="requestValue" autocomplete="off" /></td>
+          <td class="tab__table-cell"><input class="tab__input-description tab__input" name="inputDescription" formControlName="requestDescription" autocomplete="off" /></td>
+        </tr>
+      </table>
+</section>
+

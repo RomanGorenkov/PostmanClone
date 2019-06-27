@@ -2,17 +2,17 @@
 <form [formGroup]="myForm" class="input-form">
   <section class="myForm__input-section">
     <div class="myForm__input-container">
-      <select class="myForm-container__drop-down-menu browser-default custom-select" name="requestName"
+      <select #type class="myForm-container__drop-down-menu browser-default custom-select" name="requestName"
       formControlName="requestName">
         <option *ngFor="let type of types" [value]="type">
           {{type}}
         </option>
       </select>
-      <input class="myForm__input" name="request" placeholder="Enter request URL" formControlName="requestUrl" />
-      <input type="number" class="myForm__input-number"  placeholder="Response" formControlName="response"/>
+      <input #url class="myForm__input" name="request" placeholder="Enter request URL" formControlName="requestUrl" />
+      <input #response id="response" type="number" class="myForm__input-number"  placeholder="Response" formControlName="response"/>
 
     </div>
-    <button type="button" class="myForm__save-button btn btn-outline-primary">Save</button>
+    <button type="button" class="myForm__save-button btn btn-outline-primary" (click)="saveJSON()">Save</button>
   </section>
   <app-main-form-tabs></app-main-form-tabs>
 </form>

@@ -14,6 +14,7 @@ import { MatButtonModule, MatCheckboxModule } from '@angular/material';
 import 'hammerjs';
 import { MainFormTabsComponent } from './main-form/main-form-tabs/main-form-tabs.component';
 import { MainFormTabComponent } from './main-form/main-form-tabs/main-form-tab/main-form-tab.component';
+import { JsonPreviewComponent } from './json-preview/json-preview.component';
 
 
 
@@ -23,6 +24,7 @@ import { MainFormTabComponent } from './main-form/main-form-tabs/main-form-tab/m
     MainFormComponent,
     MainFormTabsComponent,
     MainFormTabComponent,
+    JsonPreviewComponent,
   ],
   imports: [
     BrowserModule,

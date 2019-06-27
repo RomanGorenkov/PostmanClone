@@ -1,8 +1,32 @@
+.tab-container{
+ display: flex;
+ width: 100%;
+}
+
 .tab__label{
   display: flex;
   margin: 10px 15px;
 }
 
+.response-section{
+  display: flex;
+  width: 500px;
+  height: 2rem;
+  margin: 10px 5px;
+}
+
+.response-section__name{
+  display: flex;
+  flex-basis: 30%;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+.response-section__input{
+  display: flex;
+  flex-basis: 70%;
+}
 .check-mark-colum{
   width: 30px;
 }
@@ -10,6 +34,17 @@
 .tab-container{
   display: flex;
   flex-direction: column;
+}
+
+.tab__table-section{
+  display: flex;
+  width: 100%;
+  max-height: 140px;
+  overflow-y: scroll;
+}
+
+.tab__table{
+  width: 100%;
 }
 
 .tab__table-cell{
@@ -26,3 +61,15 @@
   padding: 0;
   border: 0;
 }
+
+.tab__table-control{
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin: 20px 0;
+}
+
+.table-control__button{
+  margin: 0 10px;
+}
+

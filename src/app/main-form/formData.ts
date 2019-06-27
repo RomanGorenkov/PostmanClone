@@ -1,7 +1,7 @@
 export class DataFromForm {
   url: '';
   method: '';
-  header: [];
+  header: '';
   data: '';
   output: '';
   assert_code: '';

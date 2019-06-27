@@ -1,23 +1,32 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { Input } from '@angular/core';
 
 import {DataService} from '../../../data.service';
 
 import { Request } from './request';
+import { Subscription } from 'rxjs/internal/Subscription';
+import { DataFromForm } from '../../formData';
 
 
 @Component({
   selector: 'app-main-form-tab',
   templateUrl: './main-form-tab.component.html',
   styleUrls: ['./main-form-tab.component.css'],
-  providers: [DataService]
 })
 export class MainFormTabComponent implements OnInit {
 
   @Input() tabName: string;
 
+  @ViewChild('key', {static: false} ) key: ElementRef;
+  @ViewChild('value', {static: false} ) value: ElementRef;
+
+
+
   condition: boolean;
+  keyValue: boolean;
+  paramArray: string[];
+  param: Subscription;
 
 
   myForm: FormGroup;
@@ -70,10 +79,15 @@ export class MainFormTabComponent implements OnInit {
 
   ngOnInit() {
     this.condition = this.tabName == 'Tests';
+    this.keyValue = this.tabName == 'Params' || this.tabName == 'Headers';
     this._createForm();
     this.addFormRequest();
+    this.dataService.saveEvent.subscribe( data => {
+      let lastData: DataFromForm = this.dataService.getData()[this.dataService.getData().length-1];
+      // lastData.header = this.getKeyValueString(this.formRequestArray);
+    });
     // console.log(this.formRequestArray);
-    console.log(this.myForm.get('requestKey'));
+    // console.log(this.myForm.get('requestKey'));
 
   }
 
@@ -81,7 +95,7 @@ export class MainFormTabComponent implements OnInit {
     // console.log("+++");
     // this.addFormRequest();
 
-    // console.log(this.formRequestArray);
+    console.log(this.formRequestArray);
   }
 
   addRequestParam() {
@@ -89,5 +103,22 @@ export class MainFormTabComponent implements OnInit {
  }
  removeRequestParam(){
    this.removeFormRequest();
+ }
+
+ getKeyValueString(requestArray: FormArray){
+  let keyValueString: string = '{';
+  let params = requestArray.value;
+  // console.log(params);
+  params.map( param => {
+    if(param.requestKey != '' && param.requestValue != ''){
+      keyValueString = keyValueString + `'${param.requestKey}': '${param.requestValue}',`
+    }
+  })
+  if(keyValueString.length < 2){
+    return;
+  }
+  keyValueString = keyValueString.slice(0, -1);
+  keyValueString = keyValueString + '}';
+  console.log(keyValueString);
  }
 }

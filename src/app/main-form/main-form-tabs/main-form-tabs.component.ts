@@ -11,7 +11,7 @@ export class MainFormTabsComponent implements OnInit {
   labelName:string='pop';
 
   constructor(private elementRef: ElementRef) {
-    console.log(this.labelName);
+    // console.log(this.labelName);
    }
 
   ngOnInit() {

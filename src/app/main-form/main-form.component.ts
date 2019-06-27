@@ -10,7 +10,6 @@ import { DataFromForm } from './formData';
   selector: 'app-main-form',
   templateUrl: './main-form.component.html',
   styleUrls: ['./main-form.component.css'],
-  providers: [DataService]
 })
 export class MainFormComponent implements OnInit {
 
@@ -46,7 +45,7 @@ export class MainFormComponent implements OnInit {
     // let respType: string = this.responseType.nativeElement.value;
 
     this.dataService.addData(data);
-    console.log(this.dataService.getData());
+    this.dataService.saveEvent.next(true);
   }
 
 }

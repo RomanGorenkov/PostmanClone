@@ -3,7 +3,13 @@
 
   <section *ngIf="condition" class="response-section">
     <span class="response-section__name">Assert code:</span>
-    <input class="response-section__input" type="number" name="inputKey" formControlName="responseKey" autocomplete="off" />
+    <!-- <input #inputKey class="response-section__input" type="number" name="inputKey" formControlName="responseKey" autocomplete="off" /> -->
+    <select #inputKey class="response-section__input browser-default custom-select" name="inputKey"
+    formControlName="responseKey" autocomplete="off">
+        <option *ngFor="let code of assertCodes" [value]="code">
+          {{code}}
+        </option>
+      </select>
   </section>
 
   <section *ngIf="keyValue" class="tab__table-section">
@@ -33,8 +39,6 @@
   </div>
 
   <section *ngIf="!keyValue" class="tab__textcontainer">
-    <textarea class="tab__textcontainer-textarea">
-
-    </textarea>
+    <textarea #bodyData class="tab__textcontainer-textarea"></textarea>
   </section>
 </section>

@@ -1,0 +1,9 @@
+<div class="sidebar-container">
+  <h2 class="sidebar__title">JSON parts</h2>
+  <section  class="sidebar__jsons-container">
+    <ul #jsonParts class="sidebar__jsons-list">
+      <li class="sidebar__jsons-item" *ngFor="let json of jsonArray">{{json.partName}}</li>
+    </ul>
+  </section>
+  <button type="button" class="btn btn-warning">Save JSON</button>
+</div>

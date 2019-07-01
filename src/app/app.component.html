@@ -1,6 +1,11 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<section class="app-container">
-  <app-main-form class="app__form"></app-main-form>
-  <app-json-preview class="app__json-preview"></app-json-preview>
-</section>
+<div class="main-container">
+  <section class="sidebar">
+    <app-json-sidebar></app-json-sidebar>
+  </section>
+  <section class="app-container">
+    <app-main-form class="app__form"></app-main-form>
+    <app-json-preview class="app__json-preview"></app-json-preview>
+  </section>
+</div>
 <router-outlet></router-outlet>

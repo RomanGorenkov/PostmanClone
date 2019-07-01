@@ -37,7 +37,6 @@ export class MainFormComponent implements OnInit {
   }
 
   saveJSON() {
-
     let data = new DataFromForm();
     data.url = this.url.nativeElement.value;
     data.method = this.responseType.nativeElement.value;

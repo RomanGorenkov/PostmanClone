@@ -31,4 +31,28 @@ export class JsonSidebarComponent implements OnInit {
   ngOnInit() {
   }
 
+  printJSON(index){
+    let data: DataFromForm[] = this.dataService.getData();
+    console.log(data[index].fullJSONpart);
+    this.dataService.jsonToPrint = data[index].fullJSONpart;
+    this.dataService.loadEvent.next(true);
+  }
+
+  saveJSON(){
+    let fullJSON: string = `{\n\t"tests":[
+    {
+      "pipeline":"test_pipeline",
+      "stages":[\n`;
+    let data: DataFromForm[] = this.dataService.getData();
+    data.forEach( part => {
+      fullJSON = fullJSON +`${part.fullJSONpart},\n`;
+    })
+    fullJSON = fullJSON.slice(0, -2) + "\n]\n}\n]\n}";
+    let convert = JSON.parse(fullJSON);
+    fullJSON = JSON.stringify(convert, null, 2);
+    this.dataService.jsonToPrint = fullJSON;
+    console.log(fullJSON);
+    this.dataService.getFullJson.next(true);
+  }
+
 }

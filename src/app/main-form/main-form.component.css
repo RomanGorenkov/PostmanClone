@@ -8,7 +8,7 @@
 
 .myForm__input-container{
   display: flex;
-  width: 60%;
+  width: 70%;
 }
 
 .myForm-container__drop-down-menu{
@@ -17,11 +17,12 @@
 }
 
 .myForm__input{
-  width: 80%;
+  width: 75%;
 }
 
-.myForm__input-number{
-  width: 20%;
+
+.myForm__json-name{
+  width: 25%;
 }
 
 .myForm__save-button{

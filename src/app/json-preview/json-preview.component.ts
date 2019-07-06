@@ -11,9 +11,12 @@ import { DataFromForm } from '../main-form/formData';
   styleUrls: ['./json-preview.component.css'],
 })
 export class JsonPreviewComponent implements OnInit {
-
+  dataToPrint={};
   @ViewChild('json', { static: false }) json: ElementRef;
+  @ViewChild('saveButton', {static: false}) saveButton: ElementRef;
   param: Subscription;
+  switchJSONPart: Subscription;
+  getFullJson: Subscription;
 
   constructor(private dataService: DataService) {
 
@@ -25,12 +28,25 @@ export class JsonPreviewComponent implements OnInit {
     this.param = this.dataService.saveEvent.subscribe(data => {
       setTimeout(() => {
         let lastData: DataFromForm = this.dataService.getData()[this.dataService.getData().length - 1];
-        if (data == true && this.addData(lastData) != '') {
-          this.json.nativeElement.value = `{${this.addData(lastData)}\n}`;
-          lastData.fullJSONpart = `{${this.addData(lastData)}\n}`;
+        if (data == true && this.addData(lastData) != '' && lastData.fullJSONpart == '' ) {
+          this.json.nativeElement.value = `${this.addData(lastData)}`;
+          lastData.fullJSONpart = `${this.addData(lastData)}`;
+          this.dataService.getData()[this.dataService.getData().length - 1].fullJSONpart
         }
       }, 10);
     });
+
+    this.switchJSONPart = this.dataService.loadEvent.subscribe(data => {
+        if(data == true){
+          this.json.nativeElement.value = this.dataService.jsonToPrint;
+        }
+    })
+
+    this.getFullJson = this.dataService.getFullJson.subscribe( data => {
+      if(data == true){
+        this.json.nativeElement.value = this.dataService.jsonToPrint;
+      }
+    })
   }
 
   ngAfterViewInit() {
@@ -38,17 +54,23 @@ export class JsonPreviewComponent implements OnInit {
   }
 
   addData(lastData: DataFromForm) : string{
-    let url: string = lastData.url != '' ? `\n\t"url":"${lastData.url}"` : '';
-    let method: string = lastData.method != '' ? `\n\t"method":"${lastData.method}"` : '';
-    let header: string = lastData.header != undefined ? `\n\t"header":"${lastData.header}` : '';
-    let assertCode: string = lastData.assert_code != '' ? `\n\t"assert_code":"${lastData.assert_code}"` : '';
-    let data: string = lastData.data != '' ? `\n\t"data":"${lastData.data}"` : '';
-
-    let dataArray = new Array( url, method, header, assertCode, data);
-    dataArray = dataArray.filter(item => item != '');
-
-    let formatData = dataArray.join(',');
+    this.dataPars(lastData.url,'url');
+    this.dataPars(lastData.method,'method');
+    this.dataPars(lastData.header,'header');
+    this.dataPars(lastData.assert_code,'assert_code');
+    this.dataPars(lastData.data,'data');
+    this.dataPars(lastData.partName,'part_name');
+    let formatData = JSON.stringify(this.dataToPrint, null, 4);
+    console.log(JSON.stringify(this.dataToPrint, null, 4));
     return formatData;
   }
 
+  dataPars(jsonPar,parName){
+    if(jsonPar) this.dataToPrint[parName] = jsonPar;
+  }
+
+  saveChange(){
+    console.log(this.json.nativeElement.value);
+    this.json.nativeElement.value
+  }
 }

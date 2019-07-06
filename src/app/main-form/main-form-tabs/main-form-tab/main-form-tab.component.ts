@@ -44,27 +44,13 @@ export class MainFormTabComponent implements OnInit {
       responseKey: '',
       formRequest: this.fb.array([])
     });
-    // this.addRequestRow();
-
   }
 
   get formRequestArray(): FormArray {
     return <FormArray>this.myForm.get('formRequest');
   }
 
-  get formPermissionOnFreeRow(): boolean {
-    // this.formRequestArray.controls.map((row: FormGroup) => {
-    //   row.controls.map((propertyValue) =>{
-    //     if(propertyValue == ""{
-
-    //     })
-    //   })
-    // })
-    return
-  }
-
   addFormRequest() {
-    // let fg = this.fb.group(new Request());
     let fg = this.fb.group({
       requestCheck: '',
       requestKey: '',
@@ -87,23 +73,6 @@ export class MainFormTabComponent implements OnInit {
     this._createForm();
     this.addFormRequest();
     this.setData();
-    // console.log(this.formRequestArray);
-    // console.log(this.myForm.get('requestKey'));
-
-  }
-
-  onInputChange() {
-    // console.log("+++");
-    // this.addFormRequest();
-
-
-    // console.log(this.formRequestArray);
-  }
-
-  ngAfterViewInit() {
-    // setTimeout(() => {
-    //   console.log(this.inputKey.nativeElement.value);
-    // }, 1000);
   }
 
   addRequestParam() {
@@ -146,10 +115,8 @@ export class MainFormTabComponent implements OnInit {
 
   setData() {
     this.dataService.saveEvent.subscribe(data => {
-      // console.log(data);
       if (data == true) {
         let lastData: DataFromForm = this.dataService.getData()[this.dataService.getData().length - 1];
-        // lastData.header = this.getKeyValueString(this.formRequestArray);
         this.getHeaderData(lastData);
         this.getAssertCode(lastData);
         this.getBodyData(lastData);

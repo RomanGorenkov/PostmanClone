@@ -19,6 +19,8 @@ export class MainFormComponent implements OnInit {
   @ViewChild('url', {static: false} ) url: ElementRef;
   @ViewChild('response', {static: false} ) responseNumber: ElementRef;
   @ViewChild('type', {static: false} ) responseType: ElementRef;
+  @ViewChild('name', {static: false} ) jsonName: ElementRef;
+
 
   constructor(private dataService: DataService) {
     this.myForm = new FormGroup({
@@ -26,6 +28,7 @@ export class MainFormComponent implements OnInit {
       "requestName": new FormControl("", Validators.required),
       "requestUrl": new FormControl("", Validators.required),
       "response": new FormControl("", Validators.required),
+      "requestJsonName": new FormControl("",Validators.required)
     });
   }
 
@@ -40,6 +43,7 @@ export class MainFormComponent implements OnInit {
     let data = new DataFromForm();
     data.url = this.url.nativeElement.value;
     data.method = this.responseType.nativeElement.value;
+    data.partName = this.jsonName.nativeElement.value != '' ? this.jsonName.nativeElement.value : 'Name';
     // let respNum: string = this.responseNumber.nativeElement.value;
     // let respType: string = this.responseType.nativeElement.value;
 

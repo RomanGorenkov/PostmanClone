@@ -8,9 +8,9 @@
           {{type}}
         </option>
       </select>
-      <input #url class="myForm__input" name="request" placeholder="Enter request URL" formControlName="requestUrl" />
+      <input #url class="myForm__input" name="request" placeholder="Request URL" formControlName="requestUrl" />
       <!-- <input #response id="response" type="number" class="myForm__input-number"  placeholder="Response" formControlName="response"/> -->
-
+      <input #name class="myForm__json-name" name="jsonName" placeholder="Name" formControlName="requestJsonName" />
     </div>
     <button type="button" class="myForm__save-button btn btn-outline-primary" (click)="saveJSON('true')">Save</button>
   </section>

@@ -8,6 +8,7 @@ export class DataService{
   saveEvent: BehaviorSubject<boolean> = new BehaviorSubject(false);
   loadEvent:BehaviorSubject<boolean> = new BehaviorSubject(false);
   getFullJson: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  activData: DataFromForm;
 
   getData(): DataFromForm[] {
 
@@ -22,5 +23,7 @@ export class DataService{
     let jsonPart: string = this.data[jsonIndex].fullJSONpart;
     console.log(jsonIndex);
     this.jsonToPrint = jsonPart;
+    this.activData = this.data[jsonIndex];
+
   }
 }

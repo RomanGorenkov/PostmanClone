@@ -8,6 +8,7 @@ export class DataFromForm {
   assert_response: string = '';
   fullJSONpart: string = '';
   partName: string = '';
+  index: number = null;
 
   constructor() {
 }

@@ -31,7 +31,9 @@ export class JsonPreviewComponent implements OnInit {
         if (data == true && this.addData(lastData) != '' && lastData.fullJSONpart == '' ) {
           this.json.nativeElement.value = `${this.addData(lastData)}`;
           lastData.fullJSONpart = `${this.addData(lastData)}`;
-          this.dataService.getData()[this.dataService.getData().length - 1].fullJSONpart
+          this.dataService.getData()[this.dataService.getData().length - 1].fullJSONpart;
+          this.saveButton.nativeElement.disabled = false;
+          this.dataService.activData = lastData;
         }
       }, 10);
     });
@@ -70,7 +72,6 @@ export class JsonPreviewComponent implements OnInit {
   }
 
   saveChange(){
-    console.log(this.json.nativeElement.value);
-    this.json.nativeElement.value
+    this.dataService.activData.fullJSONpart = this.json.nativeElement.value;
   }
 }

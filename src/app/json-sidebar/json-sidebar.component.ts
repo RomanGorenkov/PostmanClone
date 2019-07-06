@@ -22,7 +22,9 @@ export class JsonSidebarComponent implements OnInit {
       let lastData: DataFromForm = this.dataService.getData()[this.dataService.getData().length - 1];
       if(data == true){
         setTimeout(() => {
+          lastData.index = this.jsonArray.length;
           this.jsonArray.push(lastData);
+
         }, 11);
       }
     });

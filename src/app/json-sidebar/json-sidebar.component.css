@@ -35,7 +35,7 @@
   position: relative;
   display: block;
   min-height: 2rem;
-  max-height: 12rem;
+  max-height: 2rem;
   width: 100%;
   color: white;
   font-weight: bold;
@@ -54,6 +54,8 @@
   padding-right: 17px;
   box-sizing: content-box;
   overflow: hidden;
+  /* visibility: hidden; */
+
 }
 
 .sidebar__jsons-item{
@@ -112,6 +114,10 @@
 }
 
 .active-pipeline{
+  max-height: 12rem;
+}
+
+.active-pipeline .sidebar__pipline-title{
   background-color: rgba(22, 20, 20, 0.781);
 }
 

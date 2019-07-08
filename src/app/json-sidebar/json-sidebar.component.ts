@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { DataService } from '../data.service';
 import { Subscription } from 'rxjs';
 import { DataFromForm } from '../main-form/formData';
+import { DomSanitizer } from '@angular/platform-browser';
+import { Url } from 'url';
 
 
 @Component({
@@ -13,16 +15,20 @@ export class JsonSidebarComponent implements OnInit {
 
   @ViewChild('pipelineName', {static: false}) pipelineName: ElementRef;
   @ViewChild('addButton', {static: false}) addButton: ElementRef;
-  @ViewChild('jsonParts', { static: false }) jsonBar: ElementRef;
+  @ViewChild('jsonParts', { static: false }) jsonParts: ElementRef;
   @ViewChild('pipelineList', { static: false }) pipelineList: ElementRef;
+  @ViewChild('pipelineItem', { static: false }) pipelineItem: ElementRef;
+
 
 
 
   param: Subscription;
   pipelineArray = [];
   jsonArray: DataFromForm[] = [];
+  fileUrl: Url;
 
-  constructor(private dataService: DataService) {
+
+  constructor(private dataService: DataService, private sanitizer: DomSanitizer) {
     this.param = this.dataService.saveEvent.subscribe(data => {
       let lastData: DataFromForm = this.dataService.getData()[this.dataService.getData().length - 1];
       if(data == true){
@@ -42,34 +48,42 @@ export class JsonSidebarComponent implements OnInit {
   printJSON(index){
     let activePipelineIndex = this.findeActivPipelineIndex(this.pipelineArray);
     console.log(activePipelineIndex);
-    // let data: DataFromForm[] = this.dataService.getData();
-    // console.log(data[index].fullJSONpart);
-    // this.dataService.jsonToPrint = data[index].fullJSONpart;
-    this.dataService.jsonToPrint = this.pipelineArray[activePipelineIndex][1].fullJSONpart;
+    this.dataService.activData = this.pipelineArray[activePipelineIndex][1][index];
+    this.dataService.jsonToPrint = this.pipelineArray[activePipelineIndex][1][index].fullJSONpart;
 
     this.dataService.loadEvent.next(true);
   }
 
   saveJSON(){
-    let fullJSON: string = `{\n\t"tests":[
-    {
-      "pipeline":"test_pipeline",
-      "stages":[\n`;
-    let data: DataFromForm[] = this.dataService.getData();
-    data.forEach( part => {
-      fullJSON = fullJSON +`${part.fullJSONpart},\n`;
+    let fullJSON: string = `{\n\t"tests":[`;
+    this.pipelineArray.map( pipeline => {
+      fullJSON = fullJSON + `{
+          "pipeline":"${pipeline[0]}",
+           "stages":[\n`;
+      pipeline[1].map( jsonPart => {
+        fullJSON = fullJSON +`${jsonPart.fullJSONpart},\n`;
+      })
+      fullJSON = fullJSON.slice(0,-2) + ']\n},\n';
     })
-    fullJSON = fullJSON.slice(0, -2) + "\n]\n}\n]\n}";
+    fullJSON = fullJSON.slice(0, -5) + "\n]\n}\n]\n}";
+    console.log(fullJSON);
     let convert = JSON.parse(fullJSON);
     fullJSON = JSON.stringify(convert, null, 2);
     this.dataService.jsonToPrint = fullJSON;
     console.log(fullJSON);
+    this.creatJSONToDownload(fullJSON);
     this.dataService.getFullJson.next(true);
+  }
+
+  creatJSONToDownload(fullJSON){
+    const data = fullJSON;
+    const blob = new Blob([data], { type: 'application/octet-stream' });
+    this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
   }
 
   addPipeline(){
 
-    this.pipelineArray.push([this.pipelineName.nativeElement.value,[],'disable']);
+    this.pipelineArray.push([this.pipelineName.nativeElement.value,[],'disable',this.pipelineArray.length]);
     console.log(this.pipelineArray);
   }
 
@@ -82,8 +96,10 @@ export class JsonSidebarComponent implements OnInit {
           this.pipelineArray[i][2] = 'disable';
         }
       }
-      selectedPipeline.classList.add('active-pipeline');
+      selectedPipeline.parentElement.classList.add('active-pipeline');
       this.pipelineArray[index][2] = 'active';
+      this.jsonArray = this.pipelineArray[index][1];
+      // console.log(this.pipelineList.nativeElement.querySelector('.active-pipeline .sidebar__jsons-pipeline .sidebar__jsons-list'));
     }
   }
 

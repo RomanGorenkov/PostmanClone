@@ -73,5 +73,7 @@ export class JsonPreviewComponent implements OnInit {
 
   saveChange(){
     this.dataService.activData.fullJSONpart = this.json.nativeElement.value;
+    // let json = JSON.parse(this.json.nativeElement.value);
+    // this.dataService.activData.partName = json.partName;
   }
 }

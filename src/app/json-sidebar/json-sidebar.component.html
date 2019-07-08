@@ -6,7 +6,7 @@
   </section>
   <section  class="sidebar__jsons-container">
     <ul #pipelineList class="sidebar__jsons-pipelines-list">
-      <li #pipelineItem class="sidebar__jsons-pipeline" *ngFor="let pipeline of pipelineArray; let i = index" (click)=choosePipeline($event.target,i)><span class="sidebar__pipline-title">{{pipeline[0]}}</span>
+      <li #pipelineItem class="sidebar__jsons-pipeline" *ngFor="let pipeline of pipelineArray; let i = index" (click)=choosePipeline($event.target,i)><span class="sidebar__pipline-title">{{pipeline.name}}</span>
           <ul #jsonParts class="sidebar__jsons-list">
               <li class="sidebar__jsons-item sidebar__list-item" *ngFor="let json of jsonArray; let i = index"  (click)="printJSON(i)">{{json.partName}}</li>
             </ul>
@@ -15,5 +15,5 @@
 
   </section>
   <button type="button" class="btn btn-warning" (click)="saveJSON()">Save JSON</button>
-  <a [href]="fileUrl" download="file.txt">DownloadFile</a>
+  <a #downloadLink class="sidebar__download-link"  [href]="fileUrl" download="file.txt">DownloadFile</a>
 </div>

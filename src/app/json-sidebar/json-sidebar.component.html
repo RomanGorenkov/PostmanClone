@@ -1,9 +1,18 @@
 <div class="sidebar-container">
   <h2 class="sidebar__title">JSON parts</h2>
+  <section class="sidebar__folder-creator">
+      <input #pipelineName class="folder-creator__name-input" placeholder="Pipeline name"/>
+      <button #addButton type="button" class="folder-creator__add-button btn btn-secondary btn-block" (click)=addPipeline()>Add</button>
+  </section>
   <section  class="sidebar__jsons-container">
-    <ul #jsonParts class="sidebar__jsons-list">
-      <li class="sidebar__jsons-item" *ngFor="let json of jsonArray; let i = index"  (click)="printJSON(i)">{{json.partName}}</li>
+    <ul #pipelineList class="sidebar__jsons-pipelines-list">
+      <li class="sidebar__jsons-pipeline" *ngFor="let pipeline of pipelineArray; let i = index" (click)=choosePipeline($event.target,i)><span class="sidebar__pipline-title">{{pipeline[0]}}</span>
+          <ul #jsonParts class="sidebar__jsons-list">
+              <li class="sidebar__jsons-item sidebar__list-item" *ngFor="let pipeline of pipelineArray; let i = index"  (click)="printJSON(i)">{{pipeline[0][1][i].partName}}</li>
+            </ul>
+      </li>
     </ul>
+
   </section>
   <button type="button" class="btn btn-warning" (click)="saveJSON()">Save JSON</button>
 </div>

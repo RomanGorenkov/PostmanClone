@@ -11,10 +11,15 @@ import { DataFromForm } from '../main-form/formData';
 })
 export class JsonSidebarComponent implements OnInit {
 
+  @ViewChild('pipelineName', {static: false}) pipelineName: ElementRef;
+  @ViewChild('addButton', {static: false}) addButton: ElementRef;
   @ViewChild('jsonParts', { static: false }) jsonBar: ElementRef;
+  @ViewChild('pipelineList', { static: false }) pipelineList: ElementRef;
+
 
 
   param: Subscription;
+  pipelineArray = [];
   jsonArray: DataFromForm[] = [];
 
   constructor(private dataService: DataService) {
@@ -22,8 +27,9 @@ export class JsonSidebarComponent implements OnInit {
       let lastData: DataFromForm = this.dataService.getData()[this.dataService.getData().length - 1];
       if(data == true){
         setTimeout(() => {
+          let activePipelineIndex = this.findeActivPipelineIndex(this.pipelineArray);
           lastData.index = this.jsonArray.length;
-          this.jsonArray.push(lastData);
+          this.pipelineArray[activePipelineIndex][1].push(lastData);
 
         }, 11);
       }
@@ -34,9 +40,13 @@ export class JsonSidebarComponent implements OnInit {
   }
 
   printJSON(index){
-    let data: DataFromForm[] = this.dataService.getData();
-    console.log(data[index].fullJSONpart);
-    this.dataService.jsonToPrint = data[index].fullJSONpart;
+    let activePipelineIndex = this.findeActivPipelineIndex(this.pipelineArray);
+    console.log(activePipelineIndex);
+    // let data: DataFromForm[] = this.dataService.getData();
+    // console.log(data[index].fullJSONpart);
+    // this.dataService.jsonToPrint = data[index].fullJSONpart;
+    this.dataService.jsonToPrint = this.pipelineArray[activePipelineIndex][1].fullJSONpart;
+
     this.dataService.loadEvent.next(true);
   }
 
@@ -55,6 +65,34 @@ export class JsonSidebarComponent implements OnInit {
     this.dataService.jsonToPrint = fullJSON;
     console.log(fullJSON);
     this.dataService.getFullJson.next(true);
+  }
+
+  addPipeline(){
+
+    this.pipelineArray.push([this.pipelineName.nativeElement.value,[],'disable']);
+    console.log(this.pipelineArray);
+  }
+
+  choosePipeline($event, index){
+    let selectedPipeline = event.srcElement as HTMLElement;
+    if(selectedPipeline.classList.contains('sidebar__pipline-title')){
+      if(this.pipelineList.nativeElement.querySelector('.active-pipeline')){
+        this.pipelineList.nativeElement.querySelector('.active-pipeline').classList.remove('active-pipeline');
+        for(let i = 0; i < this.pipelineArray.length; i++){
+          this.pipelineArray[i][2] = 'disable';
+        }
+      }
+      selectedPipeline.classList.add('active-pipeline');
+      this.pipelineArray[index][2] = 'active';
+    }
+  }
+
+  findeActivPipelineIndex(pipelineArray){
+    for(let i = 0; i < this.pipelineArray.length; i++){
+      if(this.pipelineArray[i][2] == 'active'){
+        return  i;
+      }
+    }
   }
 
 }

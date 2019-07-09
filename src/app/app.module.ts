@@ -8,7 +8,6 @@ import { ReactiveFormsModule }   from '@angular/forms';
 import { FormsModule }   from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-// import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatCheckboxModule } from '@angular/material';
 
 import 'hammerjs';
@@ -36,7 +35,6 @@ import { JsonSidebarComponent } from './json-sidebar/json-sidebar.component';
     ReactiveFormsModule,
     MatTabsModule,
     BrowserAnimationsModule,
-    // NoopAnimationsModule,
     MatButtonModule,
     MatCheckboxModule
   ],

@@ -29,7 +29,7 @@ export class JsonSidebarComponent implements OnInit {
       let lastData: DataFromForm = this.dataService.getData()[this.dataService.getData().length - 1];
       if (data == true) {
         setTimeout(() => {
-          let activePipelineIndex = this.findeActivPipelineIndex(this.pipelineArray);
+          let activePipelineIndex = this.findeActivPipelineIndex();
           lastData.index = this.jsonArray.length;
           this.pipelineArray[activePipelineIndex].jsonArray.push(lastData);
         }, 11);
@@ -41,7 +41,7 @@ export class JsonSidebarComponent implements OnInit {
   }
 
   printJSON(index) {
-    let activePipelineIndex = this.findeActivPipelineIndex(this.pipelineArray);
+    let activePipelineIndex = this.findeActivPipelineIndex();
     this.dataService.activData = this.pipelineArray[activePipelineIndex].jsonArray[index];
     this.dataService.jsonToPrint = this.pipelineArray[activePipelineIndex].jsonArray[index].fullJSONpart;
     this.dataService.loadEvent.next(true);
@@ -92,7 +92,7 @@ export class JsonSidebarComponent implements OnInit {
     this.pipelineArray.push(new Pipeline(this.pipelineName.nativeElement.value, this.pipelineArray.length));
   }
 
-  choosePipeline($event, index) {
+  choosePipeline($event, index: number) {
     let selectedPipeline = event.srcElement as HTMLElement;
     if (selectedPipeline.parentElement.classList.contains('active-pipeline')) {
       this.disablePipelines();
@@ -113,13 +113,13 @@ export class JsonSidebarComponent implements OnInit {
     }
   }
 
-  enablePipeline(selectedPipeline, index) {
+  enablePipeline(selectedPipeline: HTMLElement, index: number) {
     selectedPipeline.parentElement.classList.add('active-pipeline');
     this.pipelineArray[index].tabStatus = 'active';
     this.jsonArray = this.pipelineArray[index].jsonArray;
   }
 
-  findeActivPipelineIndex(pipelineArray) {
+  findeActivPipelineIndex() {
     for (let i = 0; i < this.pipelineArray.length; i++) {
       if (this.pipelineArray[i].tabStatus == 'active') {
         return i;

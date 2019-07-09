@@ -82,7 +82,7 @@ export class MainFormTabComponent implements OnInit {
     this.removeFormRequest();
   }
 
-  getKeyValueString(requestArray: FormArray): string {
+  getKeyValueHeaderString(requestArray: FormArray): string {
     let keyValueString: string = '{';
     let params = requestArray.value;
     params.map(param => {
@@ -98,7 +98,7 @@ export class MainFormTabComponent implements OnInit {
     return keyValueString;
   }
 
-  getKeyValueUrlParam(requestArray: FormArray): string{
+  getKeyValueParamString(requestArray: FormArray): string{
     let keyValueString: string = '?';
     let params = requestArray.value;
     params.map(param => {
@@ -134,7 +134,7 @@ export class MainFormTabComponent implements OnInit {
 
   getHeaderData(lastData: DataFromForm){
     if (this.tabName == 'Headers') {
-      let header: string = this.getKeyValueString(this.formRequestArray);
+      let header: string = this.getKeyValueHeaderString(this.formRequestArray);
       lastData.header = header;
     }
   }
@@ -148,7 +148,7 @@ export class MainFormTabComponent implements OnInit {
 
   getParamData(lastData: DataFromForm){
     if (this.tabName == 'Params') {
-      let urlParam: string = this.getKeyValueUrlParam(this.formRequestArray);
+      let urlParam: string = this.getKeyValueParamString(this.formRequestArray);
       lastData.url = lastData.url + (urlParam != undefined ? urlParam : '');
     }
   }

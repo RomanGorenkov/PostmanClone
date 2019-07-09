@@ -33,7 +33,7 @@ export class MainFormComponent implements OnInit {
   }
 
   submit() {
-    console.log(this.myForm);
+
   }
 
   ngOnInit() {
@@ -44,9 +44,6 @@ export class MainFormComponent implements OnInit {
     data.url = this.url.nativeElement.value;
     data.method = this.responseType.nativeElement.value;
     data.partName = this.jsonName.nativeElement.value != '' ? this.jsonName.nativeElement.value : 'Name';
-    // let respNum: string = this.responseNumber.nativeElement.value;
-    // let respType: string = this.responseType.nativeElement.value;
-
     this.dataService.addData(data);
     this.dataService.saveEvent.next(true);
   }

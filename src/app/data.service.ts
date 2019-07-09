@@ -11,17 +11,14 @@ export class DataService{
   activData: DataFromForm;
 
   getData(): DataFromForm[] {
-
     return this.data;
   }
   addData(formData: DataFromForm){
-
     this.data.push(formData);
   }
 
   findJsonByIndex( jsonIndex: number ){
     let jsonPart: string = this.data[jsonIndex].fullJSONpart;
-    console.log(jsonIndex);
     this.jsonToPrint = jsonPart;
     this.activData = this.data[jsonIndex];
 

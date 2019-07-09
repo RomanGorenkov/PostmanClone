@@ -40,7 +40,7 @@ export class JsonSidebarComponent implements OnInit {
   ngOnInit() {
   }
 
-  printJSON(index) {
+  printJSON(index:number) {
     let activePipelineIndex = this.findeActivPipelineIndex();
     this.dataService.activData = this.pipelineArray[activePipelineIndex].jsonArray[index];
     this.dataService.jsonToPrint = this.pipelineArray[activePipelineIndex].jsonArray[index].fullJSONpart;
@@ -68,7 +68,6 @@ export class JsonSidebarComponent implements OnInit {
         fullJSON = fullJSON + ']\n},\n';
       } else{
         fullJSON = fullJSON.slice(0, -2) + ']\n},\n';
-
       }
     })
     fullJSON = fullJSON.slice(0, -5) + "\n]\n}\n]\n}";

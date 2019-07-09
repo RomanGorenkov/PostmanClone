@@ -18,9 +18,9 @@
             <th class="tab__table-cell">VALUE</th>
           </tr>
           <tr *ngFor="let item of formRequestArray.controls; let i=index" [formGroupName]="i">
-            <td #key class="tab__table-cell"><input class="tab__input-key tab__input" name="inputKey" formControlName="requestKey"
+            <td class="tab__table-cell"><input class="tab__input-key tab__input" name="inputKey" formControlName="requestKey"
                 autocomplete="off"/></td>
-            <td #value class="tab__table-cell"><input class="tab__input-value tab__input" name="inputValue"
+            <td #value class="tab__table-cell"><input #key class="tab__input-value tab__input" name="inputValue"
                 formControlName="requestValue" autocomplete="off"/></td>
           </tr>
         </table>

@@ -30,6 +30,7 @@ export class MainFormTabComponent implements OnInit {
   paramArray: string[];
   param: Subscription;
   assertCodes: string[] = ["100", "101", "102", "200", "201", "202", "203", "204", "205", "206", "300", "301", "302", "303", "304", "305", "306", "307", "308", "400", "401", "402", "403", "404", "405", "406", "407", "408", "409", "410", "411", "412", "413", "414", "415", "416", "417", "500", "501", "502", "503", "504", "504"];
+  loadJsonPartEvent: Subscription;
 
 
 
@@ -52,10 +53,10 @@ export class MainFormTabComponent implements OnInit {
 
   addFormRequest() {
     let fg = this.fb.group({
-      requestCheck: '',
+      // requestCheck: '',
       requestKey: '',
       requestValue: '',
-      requestDescription: '',
+      // requestDescription: '',
     });
     this.formRequestArray.push(fg);
   }
@@ -73,6 +74,12 @@ export class MainFormTabComponent implements OnInit {
     this._createForm();
     this.addFormRequest();
     this.setData();
+
+    this.loadJsonPartEvent = this.dataService.loadEvent.subscribe( permission => {
+      if(permission == true){
+        this.uploadFormData();
+      }
+    });
   }
 
   addRequestParam() {
@@ -150,6 +157,22 @@ export class MainFormTabComponent implements OnInit {
     if (this.tabName == 'Params') {
       let urlParam: string = this.getKeyValueParamString(this.formRequestArray);
       lastData.url = lastData.url + (urlParam != undefined ? urlParam : '');
+      lastData.paramsArray = this.formRequestArray.value;
     }
+  }
+
+  setAssertCode(){
+
+  }
+
+  uploadFormData(){
+    let dataToUpload:DataFromForm = this.dataService.activData;
+    this.uploadParamsData(dataToUpload);
+  }
+
+  uploadParamsData( dataToUpload:DataFromForm ){
+    console.log(this.key);
+    console.log(this.formRequestArray.value[0]);
+    this.formRequestArray.value[0].requestKey = 'lol';
   }
 }

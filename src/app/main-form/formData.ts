@@ -1,3 +1,5 @@
+import { FormArray } from '@angular/forms';
+
 export class DataFromForm {
   url: string = '';
   method: string = '';
@@ -9,6 +11,8 @@ export class DataFromForm {
   fullJSONpart: string = '';
   partName: string = '';
   index: number = null;
+
+  paramsArray: FormArray = null;
 
   constructor() {
 }

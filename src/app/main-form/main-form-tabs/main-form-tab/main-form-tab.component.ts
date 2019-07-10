@@ -20,7 +20,7 @@ export class MainFormTabComponent implements OnInit {
 
   @ViewChild('key', { static: false }) key: ElementRef;
   @ViewChild('value', { static: false }) value: ElementRef;
-  @ViewChild('inputKey', { static: false }) inputKey: ElementRef;
+  @ViewChild('inputKey', { static: false }) assertCode: ElementRef;
   @ViewChild('bodyData', { static: false }) bodyData: ElementRef;
 
 
@@ -134,7 +134,7 @@ export class MainFormTabComponent implements OnInit {
 
   getAssertCode(lastData: DataFromForm) {
     if (this.tabName == 'Tests') {
-      let assertCode = this.inputKey.nativeElement.value;
+      let assertCode = this.assertCode.nativeElement.value;
       lastData.assert_code = assertCode;
     }
   }
@@ -178,7 +178,7 @@ export class MainFormTabComponent implements OnInit {
       this.uploadBodyData(dataToUpload);
     }
     if (this.tabName == 'Tests') {
-
+      this.uploadTestData(dataToUpload);
     }
 
   }
@@ -206,7 +206,7 @@ export class MainFormTabComponent implements OnInit {
   }
 
   uploadTestData(dataToUpload: DataFromForm){
-
+    this.assertCode.nativeElement.value = dataToUpload.assert_code;
   }
 
   trimFormRequestArrayByTemplate(template) {

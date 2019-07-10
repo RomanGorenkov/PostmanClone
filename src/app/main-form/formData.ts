@@ -13,6 +13,7 @@ export class DataFromForm {
   index: number = null;
 
   paramsArray = null;
+  hedersArray = null;
 
   constructor() {
 }

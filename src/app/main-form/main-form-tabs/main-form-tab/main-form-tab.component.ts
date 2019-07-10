@@ -143,6 +143,7 @@ export class MainFormTabComponent implements OnInit {
     if (this.tabName == 'Headers') {
       let header: string = this.getKeyValueHeaderString(this.formRequestArray);
       lastData.header = header;
+      lastData.hedersArray = this.formRequestArray.value;
     }
   }
 
@@ -170,19 +171,28 @@ export class MainFormTabComponent implements OnInit {
     if (this.tabName == 'Params') {
       this.uploadParamsData(dataToUpload);
     }
+    if (this.tabName == 'Headers') {
+      this.uploadHeadersData(dataToUpload);
+    }
+
   }
 
   uploadParamsData(dataToUpload: DataFromForm) {
     this.trimFormRequestArrayByTemplate(dataToUpload.paramsArray);
-    dataToUpload.paramsArray.map((keyValueLine, index) => {
+    dataToUpload.paramsArray.map((keyValueLine, index: number) => {
       this.expandFormRequestArrayForWriting(index);
       this.formRequestArray.get(`${index}`).get('requestKey').setValue(`${keyValueLine.requestKey}`);
       this.formRequestArray.get(`${index}`).get('requestValue').setValue(`${keyValueLine.requestValue}`);
     })
   }
 
-  uploadHeaderData(dataToUpload: DataFromForm) {
-
+  uploadHeadersData(dataToUpload: DataFromForm) {
+    this.trimFormRequestArrayByTemplate(dataToUpload.hedersArray);
+    dataToUpload.hedersArray.map((keyValueLine, index: number) => {
+      this.expandFormRequestArrayForWriting(index);
+      this.formRequestArray.get(`${index}`).get('requestKey').setValue(`${keyValueLine.requestKey}`);
+      this.formRequestArray.get(`${index}`).get('requestValue').setValue(`${keyValueLine.requestValue}`);
+    })
   }
 
   trimFormRequestArrayByTemplate(template) {
@@ -191,7 +201,7 @@ export class MainFormTabComponent implements OnInit {
     }
   }
 
-  expandFormRequestArrayForWriting(index) {
+  expandFormRequestArrayForWriting(index: number) {
     if (index >= this.formRequestArray.length) {
       this.addFormRequest();
     }

@@ -149,7 +149,7 @@ export class MainFormTabComponent implements OnInit {
 
   getBodyData(lastData: DataFromForm) {
     if (this.tabName == 'Body') {
-      let body: string = this.bodyData.nativeElement.value;;
+      let body: string = this.bodyData.nativeElement.value;
       lastData.data = body;
     }
   }
@@ -174,6 +174,12 @@ export class MainFormTabComponent implements OnInit {
     if (this.tabName == 'Headers') {
       this.uploadHeadersData(dataToUpload);
     }
+    if (this.tabName == 'Body') {
+      this.uploadBodyData(dataToUpload);
+    }
+    if (this.tabName == 'Tests') {
+
+    }
 
   }
 
@@ -193,6 +199,14 @@ export class MainFormTabComponent implements OnInit {
       this.formRequestArray.get(`${index}`).get('requestKey').setValue(`${keyValueLine.requestKey}`);
       this.formRequestArray.get(`${index}`).get('requestValue').setValue(`${keyValueLine.requestValue}`);
     })
+  }
+
+  uploadBodyData(dataToUpload: DataFromForm){
+    this.bodyData.nativeElement.value = dataToUpload.data;
+  }
+
+  uploadTestData(dataToUpload: DataFromForm){
+
   }
 
   trimFormRequestArrayByTemplate(template) {

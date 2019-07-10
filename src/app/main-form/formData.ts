@@ -12,7 +12,7 @@ export class DataFromForm {
   partName: string = '';
   index: number = null;
 
-  paramsArray: FormArray = null;
+  paramsArray = null;
 
   constructor() {
 }

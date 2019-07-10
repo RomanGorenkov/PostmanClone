@@ -75,8 +75,8 @@ export class MainFormTabComponent implements OnInit {
     this.addFormRequest();
     this.setData();
 
-    this.loadJsonPartEvent = this.dataService.loadEvent.subscribe( permission => {
-      if(permission == true){
+    this.loadJsonPartEvent = this.dataService.loadEvent.subscribe(permission => {
+      if (permission == true) {
         this.uploadFormData();
       }
     });
@@ -105,7 +105,7 @@ export class MainFormTabComponent implements OnInit {
     return keyValueString;
   }
 
-  getKeyValueParamString(requestArray: FormArray): string{
+  getKeyValueParamString(requestArray: FormArray): string {
     let keyValueString: string = '?';
     let params = requestArray.value;
     params.map(param => {
@@ -139,21 +139,21 @@ export class MainFormTabComponent implements OnInit {
     }
   }
 
-  getHeaderData(lastData: DataFromForm){
+  getHeaderData(lastData: DataFromForm) {
     if (this.tabName == 'Headers') {
       let header: string = this.getKeyValueHeaderString(this.formRequestArray);
       lastData.header = header;
     }
   }
 
-  getBodyData(lastData: DataFromForm){
+  getBodyData(lastData: DataFromForm) {
     if (this.tabName == 'Body') {
       let body: string = this.bodyData.nativeElement.value;;
       lastData.data = body;
     }
   }
 
-  getParamData(lastData: DataFromForm){
+  getParamData(lastData: DataFromForm) {
     if (this.tabName == 'Params') {
       let urlParam: string = this.getKeyValueParamString(this.formRequestArray);
       lastData.url = lastData.url + (urlParam != undefined ? urlParam : '');
@@ -161,18 +161,39 @@ export class MainFormTabComponent implements OnInit {
     }
   }
 
-  setAssertCode(){
+  setAssertCode() {
 
   }
 
-  uploadFormData(){
-    let dataToUpload:DataFromForm = this.dataService.activData;
-    this.uploadParamsData(dataToUpload);
+  uploadFormData() {
+    let dataToUpload: DataFromForm = this.dataService.activData;
+    if (this.tabName == 'Params') {
+      this.uploadParamsData(dataToUpload);
+    }
   }
 
-  uploadParamsData( dataToUpload:DataFromForm ){
-    console.log(this.key);
-    console.log(this.formRequestArray.value[0]);
-    this.formRequestArray.value[0].requestKey = 'lol';
+  uploadParamsData(dataToUpload: DataFromForm) {
+    this.trimFormRequestArrayByTemplate(dataToUpload.paramsArray);
+    dataToUpload.paramsArray.map((keyValueLine, index) => {
+      this.expandFormRequestArrayForWriting(index);
+      this.formRequestArray.get(`${index}`).get('requestKey').setValue(`${keyValueLine.requestKey}`);
+      this.formRequestArray.get(`${index}`).get('requestValue').setValue(`${keyValueLine.requestValue}`);
+    })
+  }
+
+  uploadHeaderData(dataToUpload: DataFromForm) {
+
+  }
+
+  trimFormRequestArrayByTemplate(template) {
+    if (this.formRequestArray.length > template.length) {
+      this.formRequestArray.removeAt(this.formRequestArray.length - (this.formRequestArray.length - template.length));
+    }
+  }
+
+  expandFormRequestArrayForWriting(index) {
+    if (index >= this.formRequestArray.length) {
+      this.addFormRequest();
+    }
   }
 }

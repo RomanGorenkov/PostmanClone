@@ -165,7 +165,9 @@ export class MainFormTabComponent implements OnInit {
   getParamData(lastData: DataFromForm) {
     if (this.tabName == 'Params') {
       let urlParam: string = this.getKeyValueParamString(this.formRequestArray);
-      lastData.url = lastData.url + (urlParam != undefined ? urlParam : '');
+      lastData.urlNative = lastData.urlNative;
+      lastData.urlParam = urlParam != undefined ? urlParam : '';
+      lastData.url = lastData.urlNative + lastData.urlParam;
       lastData.paramsArray = this.formRequestArray.value;
     }
   }

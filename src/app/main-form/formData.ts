@@ -2,6 +2,8 @@ import { FormArray } from '@angular/forms';
 
 export class DataFromForm {
   url: string = '';
+  urlNative: string = '';
+  urlParam: string = '';
   method: string = '';
   header: string = '';
   data: string = '';
@@ -16,5 +18,6 @@ export class DataFromForm {
   hedersArray = null;
 
   constructor() {
-}
+
+  }
 }

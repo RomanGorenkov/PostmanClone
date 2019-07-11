@@ -63,18 +63,18 @@ export class JsonPreviewComponent implements OnInit {
     if (jsonPar) this.dataToPrint[parName] = jsonPar;
   }
 
-  saveChange() {
-    this.dataService.activData.fullJSONpart = this.json.nativeElement.value;
-  }
-
   previewRender(permission: boolean) {
     let lastData: DataFromForm = this.dataService.getData()[this.dataService.getData().length - 1];
-    if (permission == true && this.creatDataString(lastData) != '' && lastData.fullJSONpart == '') {
+    if (permission == true && this.creatDataString(lastData) != '' && lastData.fullJSONpart == '' && this.dataService.resave == false) {
       let lastDataString: string = this.creatDataString(lastData);
       this.json.nativeElement.value = lastDataString;
-      this.saveButton.nativeElement.disabled = false;
       this.dataService.activData = lastData;
       lastData.fullJSONpart = lastDataString;
+    }
+    if(this.dataService.resave == true){
+      let activDataString: string = this.creatDataString(this.dataService.activData);
+      this.json.nativeElement.value = activDataString;
+      this.dataService.activData.fullJSONpart = activDataString;
     }
   }
 }

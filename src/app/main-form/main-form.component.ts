@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer2, } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
-import {DataService} from '../data.service';
+import { DataService } from '../data.service';
 import { DataFromForm } from './formData';
 import { Subscription } from 'rxjs';
 
@@ -14,10 +14,10 @@ import { Subscription } from 'rxjs';
 })
 export class MainFormComponent implements OnInit {
 
-  @ViewChild('url', {static: false} ) url: ElementRef;
-  @ViewChild('response', {static: false} ) responseNumber: ElementRef;
-  @ViewChild('type', {static: false} ) method: ElementRef;
-  @ViewChild('name', {static: false} ) jsonName: ElementRef;
+  @ViewChild('url', { static: false }) url: ElementRef;
+  @ViewChild('response', { static: false }) responseNumber: ElementRef;
+  @ViewChild('type', { static: false }) method: ElementRef;
+  @ViewChild('name', { static: false }) jsonName: ElementRef;
 
   types: string[] = ["GET", "POST", "PUT", "PATCH", "DELETE", "COPY", "HEAD", "OPTIONS", "LINK", "UNLINK", "PURGE", "LOCK", "UNLOCK", "PROPFIND", "VIEW"];
   myForm: FormGroup;
@@ -30,7 +30,7 @@ export class MainFormComponent implements OnInit {
       "requestName": new FormControl("", Validators.required),
       "requestUrl": new FormControl("", Validators.required),
       "response": new FormControl("", Validators.required),
-      "requestJsonName": new FormControl("",Validators.required)
+      "requestJsonName": new FormControl("", Validators.required)
     });
 
 
@@ -41,24 +41,35 @@ export class MainFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadJsonPartEvent = this.dataService.loadEvent.subscribe( permission => {
-      if(permission == true){
+    this.loadJsonPartEvent = this.dataService.loadEvent.subscribe(permission => {
+      if (permission == true) {
         this.uploadFormData();
       }
     });
   }
 
   saveJSON() {
-    let data = new DataFromForm();
-    data.url = this.url.nativeElement.value;
-    data.method = this.method.nativeElement.value;
-    data.partName = this.jsonName.nativeElement.value != '' ? this.jsonName.nativeElement.value : 'Name';
-    this.dataService.addData(data);
-    this.dataService.saveEvent.next(true);
+    if (this.dataService.resave == false) {
+      let data = new DataFromForm();
+      data.url = this.url.nativeElement.value;
+      data.method = this.method.nativeElement.value;
+      data.partName = this.jsonName.nativeElement.value != '' ? this.jsonName.nativeElement.value : 'Name';
+      this.dataService.addData(data);
+      this.dataService.saveEvent.next(true);
+    } else{
+      console.log("save");
+      this.dataService.activData.method = this.method.nativeElement.value;
+      this.dataService.activData.url = this.url.nativeElement.value;
+      this.dataService.activData.partName = this.jsonName.nativeElement.value;
+      this.dataService.saveEvent.next(true);
+
+    }
+    // console.log(this.dataService.activData)
+
   }
 
-  uploadFormData(){
-    let dataToUpload:DataFromForm = this.dataService.activData;
+  uploadFormData() {
+    let dataToUpload: DataFromForm = this.dataService.activData;
     this.url.nativeElement.value = dataToUpload.url;
     this.method.nativeElement.value = dataToUpload.method;
     this.jsonName.nativeElement.value = dataToUpload.partName;

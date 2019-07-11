@@ -9,6 +9,7 @@ export class DataService{
   loadEvent:BehaviorSubject<boolean> = new BehaviorSubject(false);
   getFullJson: BehaviorSubject<boolean> = new BehaviorSubject(false);
   activData: DataFromForm;
+  resave: boolean = false;
 
   getData(): DataFromForm[] {
     return this.data;

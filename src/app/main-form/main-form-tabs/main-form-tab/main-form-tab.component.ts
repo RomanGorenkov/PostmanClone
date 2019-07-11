@@ -53,10 +53,8 @@ export class MainFormTabComponent implements OnInit {
 
   addFormRequest() {
     let fg = this.fb.group({
-      // requestCheck: '',
       requestKey: '',
       requestValue: '',
-      // requestDescription: '',
     });
     this.formRequestArray.push(fg);
   }
@@ -123,13 +121,23 @@ export class MainFormTabComponent implements OnInit {
   setData() {
     this.dataService.saveEvent.subscribe(data => {
       if (data == true) {
-        let lastData: DataFromForm = this.dataService.getData()[this.dataService.getData().length - 1];
-        this.getHeaderData(lastData);
-        this.getAssertCode(lastData);
-        this.getBodyData(lastData);
-        this.getParamData(lastData);
+        let dataForSave: DataFromForm = this.getDataForSave();
+        this.getHeaderData(dataForSave);
+        this.getAssertCode(dataForSave);
+        this.getBodyData(dataForSave);
+        this.getParamData(dataForSave);
       }
     });
+  }
+
+  getDataForSave(){
+    let dataForSave: DataFromForm;
+    if(this.dataService.resave == false){
+      dataForSave = this.dataService.getData()[this.dataService.getData().length - 1];
+    } else{
+      dataForSave = this.dataService.activData;
+    }
+    return dataForSave;
   }
 
   getAssertCode(lastData: DataFromForm) {

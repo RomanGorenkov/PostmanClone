@@ -128,6 +128,10 @@
   overflow-y: scroll;
 }
 
+.active-json{
+  background-color: #fafafae3;
+}
+
 .active-pipeline .sidebar__pipline-title{
   background-color: rgb(27, 25, 25);
 }

@@ -16,6 +16,7 @@ export class JsonSidebarComponent implements OnInit {
 
   @ViewChild('pipelineName', { static: false }) pipelineName: ElementRef;
   @ViewChild('pipelineList', { static: false }) pipelineList: ElementRef;
+  @ViewChild('jsonParts', { static: false }) jsonList: ElementRef;
   @ViewChild('downloadLink', { static: false }) downloadLink: ElementRef;
 
   param: Subscription;
@@ -29,9 +30,11 @@ export class JsonSidebarComponent implements OnInit {
       let lastData: DataFromForm = this.dataService.getData()[this.dataService.getData().length - 1];
       if (data == true) {
         setTimeout(() => {
-          let activePipelineIndex = this.findeActivPipelineIndex();
-          lastData.index = this.jsonArray.length;
-          this.pipelineArray[activePipelineIndex].jsonArray.push(lastData);
+          if (this.dataService.resave == false) {
+            let activePipelineIndex = this.findeActivPipelineIndex();
+            lastData.index = this.jsonArray.length;
+            this.pipelineArray[activePipelineIndex].jsonArray.push(lastData);
+          }
         }, 11);
       }
     });
@@ -40,14 +43,39 @@ export class JsonSidebarComponent implements OnInit {
   ngOnInit() {
   }
 
-  printJSON(index:number) {
+  printJSON(index: number) {
+    // this.disableJsonPart();
+    this.dataService.resave = true;
+    let jsonPart = event.srcElement as HTMLElement;
     let activePipelineIndex = this.findeActivPipelineIndex();
+    // jsonPart.classList.add('active-json');
+    this.disableJsonPart(jsonPart);
     this.dataService.activData = this.pipelineArray[activePipelineIndex].jsonArray[index];
     this.dataService.jsonToPrint = this.pipelineArray[activePipelineIndex].jsonArray[index].fullJSONpart;
     this.dataService.loadEvent.next(true);
+    // console.log(this.dataService.activData);
+    console.log(this.pipelineArray);
+  }
+
+  disableJsonPart(target: HTMLElement) {
+    if (this.jsonList.nativeElement.querySelector('.active-json')) {
+      if(this.jsonList.nativeElement.querySelector('.active-json') == target){
+        this.jsonList.nativeElement.querySelector('.active-json').classList.remove('active-json');
+        this.dataService.resave = false;
+        console.log('+++');
+        return;
+      } else{
+        this.jsonList.nativeElement.querySelector('.active-json').classList.remove('active-json');
+        target.classList.add('active-json');
+      }
+    } else{
+      target.classList.add('active-json');
+    }
   }
 
   saveJSON() {
+    console.log(this.pipelineArray);
+
     let fullJSON = this.creatJSONString();
     fullJSON = this.convertStringToJSON(fullJSON);
     this.creatJSONToDownload(fullJSON);
@@ -55,7 +83,7 @@ export class JsonSidebarComponent implements OnInit {
     this.dataService.getFullJson.next(true);
   }
 
-  creatJSONString(){
+  creatJSONString() {
     let fullJSON: string = `{\n\t"tests":[`;
     this.pipelineArray.map(pipeline => {
       fullJSON = fullJSON + `{
@@ -64,9 +92,9 @@ export class JsonSidebarComponent implements OnInit {
       pipeline.jsonArray.map(jsonPart => {
         fullJSON = fullJSON + `${jsonPart.fullJSONpart},\n`;
       })
-      if(pipeline.jsonArray.length == 0){
+      if (pipeline.jsonArray.length == 0) {
         fullJSON = fullJSON + ']\n},\n';
-      } else{
+      } else {
         fullJSON = fullJSON.slice(0, -2) + ']\n},\n';
       }
     })
@@ -74,7 +102,7 @@ export class JsonSidebarComponent implements OnInit {
     return fullJSON;
   }
 
-  convertStringToJSON(fullJSON){
+  convertStringToJSON(fullJSON) {
     fullJSON = JSON.parse(fullJSON);
     fullJSON = JSON.stringify(fullJSON, null, 2);
     return fullJSON;
@@ -101,7 +129,8 @@ export class JsonSidebarComponent implements OnInit {
       if (this.pipelineList.nativeElement.querySelector('.active-pipeline')) {
         this.disablePipelines();
       }
-      this.enablePipeline(selectedPipeline,index);
+      this.enablePipeline(selectedPipeline, index);
+      this.dataService.resave = false;
     }
   }
 

@@ -44,16 +44,13 @@ export class JsonSidebarComponent implements OnInit {
   }
 
   printJSON(index: number) {
-    // this.disableJsonPart();
     this.dataService.resave = true;
     let jsonPart = event.srcElement as HTMLElement;
     let activePipelineIndex = this.findeActivPipelineIndex();
-    // jsonPart.classList.add('active-json');
     this.disableJsonPart(jsonPart);
     this.dataService.activData = this.pipelineArray[activePipelineIndex].jsonArray[index];
     this.dataService.jsonToPrint = this.pipelineArray[activePipelineIndex].jsonArray[index].fullJSONpart;
     this.dataService.loadEvent.next(true);
-    // console.log(this.dataService.activData);
     console.log(this.pipelineArray);
   }
 

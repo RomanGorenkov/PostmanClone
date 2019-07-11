@@ -97,6 +97,20 @@
   visibility: hidden;
 }
 
+input[type="file"] {
+  display: none;
+}
+.sidebar__file-upload-button {
+  border: 1px solid #ccc;
+  display: inline-block;
+  padding: 6px 12px;
+  margin: 5px 0;
+  cursor: pointer;
+}
+
+.sidebar__file-upload-button:hover{
+  color: cornflowerblue;
+}
 .sidebar__pipline-title:hover{
   background-color: rgb(29, 28, 28);
 }

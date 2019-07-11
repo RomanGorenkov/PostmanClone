@@ -1,19 +1,27 @@
 <div class="sidebar-container">
   <h2 class="sidebar__title">JSON parts</h2>
   <section class="sidebar__folder-creator">
-      <input #pipelineName class="folder-creator__name-input" placeholder="Pipeline name"/>
-      <button #addButton type="button" class="folder-creator__add-button btn btn-secondary btn-block" (click)=addPipeline()>Add</button>
+    <input #pipelineName class="folder-creator__name-input" placeholder="Pipeline name" />
+    <button #addButton type="button" class="folder-creator__add-button btn btn-secondary btn-block"
+      (click)=addPipeline()>Add</button>
   </section>
-  <section  class="sidebar__jsons-container">
+  <section class="sidebar__jsons-container">
     <ul #pipelineList class="sidebar__jsons-pipelines-list">
-      <li #pipelineItem class="sidebar__jsons-pipeline" *ngFor="let pipeline of pipelineArray; let i = index" (click)=choosePipeline($event.target,i)><span class="sidebar__pipline-title">{{pipeline.name}}</span>
-          <ul #jsonParts class="sidebar__jsons-list">
-              <li class="sidebar__jsons-item sidebar__list-item" *ngFor="let json of jsonArray; let i = index"  (click)="printJSON(i)">{{json.partName}}</li>
-            </ul>
+      <li #pipelineItem class="sidebar__jsons-pipeline" *ngFor="let pipeline of pipelineArray; let i = index"
+        (click)=choosePipeline($event.target,i)><span class="sidebar__pipline-title">{{pipeline.name}}</span>
+        <ul #jsonParts class="sidebar__jsons-list">
+          <li class="sidebar__jsons-item sidebar__list-item" *ngFor="let json of jsonArray; let i = index"
+            (click)="printJSON(i)">{{json.partName}}</li>
+        </ul>
       </li>
     </ul>
 
   </section>
+  <!-- <input type='file' class="form-control-file" accept='text/plain' multiple (change)='openFile($event)'> -->
+  <label class="sidebar__file-upload-button">
+    <input type="file"/>
+    <i class="file-upload-button_content fa fa-cloud-upload"></i> JSON Upload
+  </label>
   <button type="button" class="btn btn-warning" (click)="saveJSON()">Save JSON</button>
-  <a #downloadLink class="sidebar__download-link"  [href]="fileUrl" download="file.txt">DownloadFile</a>
+  <a #downloadLink class="sidebar__download-link" [href]="fileUrl" download="file.txt">DownloadFile</a>
 </div>

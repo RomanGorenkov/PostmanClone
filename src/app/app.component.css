@@ -5,7 +5,7 @@
 }
 
 .sidebar{
-  width: 15%;
+  width: 20%;
   height: 100%;
   border-right: 1px solid  rgba(0, 0, 0, .2);
 }
@@ -13,7 +13,7 @@
 .app-container{
   display: flex;
   flex-direction: column;
-  width: 85%;
+  width: 80%;
   height: 100%;
   /* background-color: aquamarine; */
 }

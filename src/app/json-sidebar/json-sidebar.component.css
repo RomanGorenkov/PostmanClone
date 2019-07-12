@@ -23,6 +23,14 @@
 
 }
 
+.sidebar__controls-container{
+  height: 20%;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .sidebar__jsons-pipelines-list{
   width: 100%;
   height: 100%;
@@ -89,15 +97,21 @@
   visibility: hidden;
 }
 
-input[type="file"] {
+.sidebar__file-upload-input{
   display: none;
 }
 .sidebar__file-upload-button {
+  width: 100%;
+  text-align: center;
   border: 1px solid #ccc;
   display: inline-block;
   padding: 6px 12px;
   margin: 5px 0;
   cursor: pointer;
+}
+
+.sidebar__file-download-button{
+  width: 100%;
 }
 
 .sidebar__file-upload-button:hover{

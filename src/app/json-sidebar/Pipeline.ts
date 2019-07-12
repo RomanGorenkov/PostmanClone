@@ -1,13 +1,14 @@
 import { DataFromForm } from '../main-form/formData';
 
 export class Pipeline {
-  name: string = '';
-  jsonArray: DataFromForm[] = [];
+  pipeline: string = '';
+  stages: DataFromForm[] = [];
   tabStatus: string = 'disable';
   index: number = 0;
 
-  constructor(name, index) {
-    this.name = name;
+  constructor(name: string, index: number) {
+    this.pipeline = name;
     this.index = index;
 }
+
 }

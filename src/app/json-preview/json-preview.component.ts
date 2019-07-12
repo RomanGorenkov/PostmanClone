@@ -54,7 +54,7 @@ export class JsonPreviewComponent implements OnInit {
     this.paramValidation(lastData.header, 'header');
     this.paramValidation(lastData.assert_code, 'assert_code');
     this.paramValidation(lastData.data, 'data');
-    this.paramValidation(lastData.partName, 'part_name');
+    this.paramValidation(lastData.part_name, 'part_name');
     let formatData = JSON.stringify(this.dataToPrint, null, 4);
     return formatData;
   }

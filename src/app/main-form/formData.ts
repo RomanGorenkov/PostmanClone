@@ -11,7 +11,7 @@ export class DataFromForm {
   assert_code: string = ''
   assert_response: string = '';
   fullJSONpart: string = '';
-  partName: string = '';
+  part_name: string = '';
   index: number = null;
 
   paramsArray = null;

@@ -5,6 +5,7 @@ import { DataFromForm } from '../main-form/formData';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Url } from 'url';
 import { Pipeline } from './Pipeline';
+import { viewClassName } from '@angular/compiler';
 
 
 @Component({
@@ -33,7 +34,7 @@ export class JsonSidebarComponent implements OnInit {
           if (this.dataService.resave == false) {
             let activePipelineIndex = this.findeActivPipelineIndex();
             lastData.index = this.jsonArray.length;
-            this.pipelineArray[activePipelineIndex].jsonArray.push(lastData);
+            this.pipelineArray[activePipelineIndex].stages.push(lastData);
           }
         }, 11);
       }
@@ -48,8 +49,8 @@ export class JsonSidebarComponent implements OnInit {
     let jsonPart = event.srcElement as HTMLElement;
     let activePipelineIndex = this.findeActivPipelineIndex();
     this.disableJsonPart(jsonPart);
-    this.dataService.activData = this.pipelineArray[activePipelineIndex].jsonArray[index];
-    this.dataService.jsonToPrint = this.pipelineArray[activePipelineIndex].jsonArray[index].fullJSONpart;
+    this.dataService.activData = this.pipelineArray[activePipelineIndex].stages[index];
+    this.dataService.jsonToPrint = this.pipelineArray[activePipelineIndex].stages[index].fullJSONpart;
     this.dataService.loadEvent.next(true);
     console.log(this.pipelineArray);
   }
@@ -84,12 +85,12 @@ export class JsonSidebarComponent implements OnInit {
     let fullJSON: string = `{\n\t"tests":[`;
     this.pipelineArray.map(pipeline => {
       fullJSON = fullJSON + `{
-          "pipeline":"${pipeline.name}",
+          "pipeline":"${pipeline.pipeline}",
            "stages":[\n`;
-      pipeline.jsonArray.map(jsonPart => {
+      pipeline.stages.map(jsonPart => {
         fullJSON = fullJSON + `${jsonPart.fullJSONpart},\n`;
       })
-      if (pipeline.jsonArray.length == 0) {
+      if (pipeline.stages.length == 0) {
         fullJSON = fullJSON + ']\n},\n';
       } else {
         fullJSON = fullJSON.slice(0, -2) + ']\n},\n';
@@ -117,6 +118,7 @@ export class JsonSidebarComponent implements OnInit {
   }
 
   choosePipeline($event, index: number) {
+    console.log(this.pipelineArray);
     let selectedPipeline = event.srcElement as HTMLElement;
     if (selectedPipeline.parentElement.classList.contains('active-pipeline')) {
       this.disablePipelines();
@@ -141,7 +143,7 @@ export class JsonSidebarComponent implements OnInit {
   enablePipeline(selectedPipeline: HTMLElement, index: number) {
     selectedPipeline.parentElement.classList.add('active-pipeline');
     this.pipelineArray[index].tabStatus = 'active';
-    this.jsonArray = this.pipelineArray[index].jsonArray;
+    this.jsonArray = this.pipelineArray[index].stages;
   }
 
   findeActivPipelineIndex() {
@@ -152,4 +154,76 @@ export class JsonSidebarComponent implements OnInit {
     }
   }
 
+  openFile(event) {
+    let input = event.target;
+    for (let index = 0; index < input.files.length; index++) {
+        let reader = new FileReader();
+        reader.onload = () => {
+            let text = reader.result;
+            // console.log(JSON.parse(`${text}`));
+            this.pipelineArray = this.parseDataToUpload(`${text}`);
+        }
+        reader.readAsText(input.files[index]);
+    };
+}
+
+parseDataToUpload(text: string){
+  let parseData = JSON.parse(`${text}`);
+  parseData.tests.forEach( (pipeline, index: number) =>{
+    // console.log(pipeline);
+    let validPipeline = new Pipeline(pipeline.pipeline, index);
+    pipeline.stages.forEach( (stages, index: number) => {
+      stages.fullJSONpart = JSON.stringify(stages, null, 4);
+      stages.urlNative = stages.url.split('?')[0];
+      stages.urlParam = '?' + stages.url.split('?')[1];
+      stages.index = index;
+      stages.paramsArray = this.parseParamDataToUpload(stages.urlParam);
+      stages.hedersArray = this.parseHeaderDataToUpload(stages.header);
+      this.dataService.addData(stages);
+      return stages;
+    })
+
+    validPipeline.index = index;
+    validPipeline.tabStatus = 'disable';
+    validPipeline.stages = pipeline.stages;
+    return validPipeline;
+  })
+  return parseData.tests;
+}
+
+parseParamDataToUpload(paramStr: string){
+  let paramsArray = [];
+  paramStr = paramStr.slice(1);
+  let paramString: string = paramStr.split('&').join('=');
+  let paramStringArray: string[] = paramString.split('=');
+  let requestKeyArray: string[] = paramStringArray.filter( (item, index) => {
+    return index % 2 == 0;
+  });
+  let requestValue: string[]= paramStringArray.filter( (item, index) => {
+    return index % 2 == 1;
+  });
+
+  for( let index: number = 0; index < requestKeyArray.length; index++){
+    paramsArray.push({requestKey: `${requestKeyArray[index]}`, requestValue: `${requestValue[index]}`});
+  }
+  return paramsArray;
+}
+
+parseHeaderDataToUpload(headerDataStr: string){
+  let paramsArray = [];
+  headerDataStr = headerDataStr.slice(2).slice(0,-2);
+  let headerString: string = headerDataStr.split("','").join("': '");
+  let headerStringArray: string[] = headerString.split("': '");
+  let requestKeyArray: string[] = headerStringArray.filter( (item, index) => {
+    return index % 2 == 0;
+  });
+  let requestValue: string[]= headerStringArray.filter( (item, index) => {
+    return index % 2 == 1;
+  });
+
+  for( let index: number = 0; index < requestKeyArray.length; index++){
+    paramsArray.push({requestKey: `${requestKeyArray[index]}`, requestValue: `${requestValue[index]}`});
+  }
+  return paramsArray;
+}
 }

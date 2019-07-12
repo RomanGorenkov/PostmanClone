@@ -53,14 +53,14 @@ export class MainFormComponent implements OnInit {
       let data = new DataFromForm();
       data.urlNative = this.url.nativeElement.value;
       data.method = this.method.nativeElement.value;
-      data.partName = this.jsonName.nativeElement.value != '' ? this.jsonName.nativeElement.value : 'Name';
+      data.part_name = this.jsonName.nativeElement.value != '' ? this.jsonName.nativeElement.value : 'Name';
       this.dataService.addData(data);
       this.dataService.saveEvent.next(true);
     } else{
       console.log("save");
       this.dataService.activData.method = this.method.nativeElement.value;
       this.dataService.activData.urlNative = this.url.nativeElement.value;
-      this.dataService.activData.partName = this.jsonName.nativeElement.value;
+      this.dataService.activData.part_name = this.jsonName.nativeElement.value;
       this.dataService.saveEvent.next(true);
 
     }
@@ -72,7 +72,7 @@ export class MainFormComponent implements OnInit {
     let dataToUpload: DataFromForm = this.dataService.activData;
     this.url.nativeElement.value = dataToUpload.urlNative;
     this.method.nativeElement.value = dataToUpload.method;
-    this.jsonName.nativeElement.value = dataToUpload.partName;
+    this.jsonName.nativeElement.value = dataToUpload.part_name;
   }
 
 }

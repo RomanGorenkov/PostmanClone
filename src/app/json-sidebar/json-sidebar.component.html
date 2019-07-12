@@ -8,19 +8,21 @@
   <section class="sidebar__jsons-container">
     <ul #pipelineList class="sidebar__jsons-pipelines-list">
       <li #pipelineItem class="sidebar__jsons-pipeline" *ngFor="let pipeline of pipelineArray; let i = index"
-        (click)=choosePipeline($event.target,i)><span class="sidebar__pipline-title">{{pipeline.name}}</span>
+        (click)=choosePipeline($event.target,i)><span class="sidebar__pipline-title">{{pipeline.pipeline}}</span>
         <ul #jsonParts class="sidebar__jsons-list">
           <li class="sidebar__jsons-item sidebar__list-item" *ngFor="let json of jsonArray; let i = index"
-            (click)="printJSON(i)">{{json.partName}}</li>
+            (click)="printJSON(i)">{{json.part_name}}</li>
         </ul>
       </li>
     </ul>
 
   </section>
-  <label class="sidebar__file-upload-button">
-    <input type="file"/>
-    <i class="file-upload-button_content fa fa-cloud-upload"></i> JSON Upload
-  </label>
-  <button type="button" class="btn btn-warning" (click)="saveJSON()">Save JSON</button>
-  <a #downloadLink class="sidebar__download-link" [href]="fileUrl" download="file.txt">DownloadFile</a>
+  <section class="sidebar__controls-container">
+    <label class="sidebar__file-upload-button">
+      <input class="sidebar__file-upload-input" type="file" accept='text/plain' multiple (change)='openFile($event)'/>
+      <i class="file-upload-button_content fa fa-cloud-upload"></i> JSON Upload
+    </label>
+    <button type="button" class="sidebar__file-download-button btn btn-warning" (click)="saveJSON()">Save JSON</button>
+    <a #downloadLink class="sidebar__download-link" [href]="fileUrl" download="file.txt">DownloadFile</a>
+  </section>
 </div>

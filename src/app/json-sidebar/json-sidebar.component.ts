@@ -47,23 +47,22 @@ export class JsonSidebarComponent implements OnInit {
   printJSON(index: number) {
     this.dataService.resave = true;
     let jsonPart = event.srcElement as HTMLElement;
+    // jsonPart.parentElement.classList.add('active-json');
     let activePipelineIndex = this.findeActivPipelineIndex();
     this.disableJsonPart(jsonPart);
     this.dataService.activData = this.pipelineArray[activePipelineIndex].stages[index];
     this.dataService.jsonToPrint = this.pipelineArray[activePipelineIndex].stages[index].fullJSONpart;
     this.dataService.loadEvent.next(true);
-    console.log(this.pipelineArray);
   }
 
   disableJsonPart(target: HTMLElement) {
-    if (this.jsonList.nativeElement.querySelector('.active-json')) {
-      if(this.jsonList.nativeElement.querySelector('.active-json') == target){
-        this.jsonList.nativeElement.querySelector('.active-json').classList.remove('active-json');
+    if (target.parentElement.querySelector('.active-json')) {
+      if(target.parentElement.querySelector('.active-json') == target){
+        target.parentElement.querySelector('.active-json').classList.remove('active-json');
         this.dataService.resave = false;
-        console.log('+++');
         return;
       } else{
-        this.jsonList.nativeElement.querySelector('.active-json').classList.remove('active-json');
+        target.parentElement.querySelector('.active-json').classList.remove('active-json');
         target.classList.add('active-json');
       }
     } else{
@@ -72,8 +71,6 @@ export class JsonSidebarComponent implements OnInit {
   }
 
   saveJSON() {
-    console.log(this.pipelineArray);
-
     let fullJSON = this.creatJSONString();
     fullJSON = this.convertStringToJSON(fullJSON);
     this.creatJSONToDownload(fullJSON);
@@ -118,7 +115,6 @@ export class JsonSidebarComponent implements OnInit {
   }
 
   choosePipeline($event, index: number) {
-    console.log(this.pipelineArray);
     let selectedPipeline = event.srcElement as HTMLElement;
     if (selectedPipeline.parentElement.classList.contains('active-pipeline')) {
       this.disablePipelines();
@@ -160,7 +156,6 @@ export class JsonSidebarComponent implements OnInit {
         let reader = new FileReader();
         reader.onload = () => {
             let text = reader.result;
-            // console.log(JSON.parse(`${text}`));
             this.pipelineArray = this.parseDataToUpload(`${text}`);
         }
         reader.readAsText(input.files[index]);
@@ -170,7 +165,6 @@ export class JsonSidebarComponent implements OnInit {
 parseDataToUpload(text: string){
   let parseData = JSON.parse(`${text}`);
   parseData.tests.forEach( (pipeline, index: number) =>{
-    // console.log(pipeline);
     let validPipeline = new Pipeline(pipeline.pipeline, index);
     pipeline.stages.forEach( (stages, index: number) => {
       stages.fullJSONpart = JSON.stringify(stages, null, 4);

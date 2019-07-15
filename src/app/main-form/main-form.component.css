@@ -3,7 +3,7 @@
 .myForm__input-section{
   display: flex;
   width: 80%;
-  margin: 5px 20px;
+  margin: 20px 20px 5px;
 }
 
 .myForm__input-container{
@@ -19,7 +19,6 @@
 .myForm__input{
   width: 75%;
 }
-
 
 .myForm__json-name{
   width: 25%;

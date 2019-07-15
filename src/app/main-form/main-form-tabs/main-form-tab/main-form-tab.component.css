@@ -35,25 +35,39 @@
 
 .tab-container{
   display: flex;
+  width: 100%;
   flex-direction: column;
 }
 
 .tab__table-section{
-  display: flex;
+  /* position: relative; */
+  width: 100%;
+  min-width: 5rem;
+  max-height: 140px;
+  overflow: hidden;
+}
+
+.tab__table-container{
+  display: block;
   width: 100%;
   max-height: 140px;
+  min-height: 70px;
   overflow-y: scroll;
+  overflow-x: hidden;
+  padding-right: 17px;
+  padding-left: 8.5px;
+  box-sizing: content-box;
 }
 
 .tab__table{
-  width: 100%;
+  width: 100%
 }
 
 .tab__table-cell{
   text-align: center;
   vertical-align: middle;
   height: 2rem;
-  border: 1px solid rgba(128, 128, 128, 0.151);
+  border: 1px solid rgba(128, 128, 128, 0.301);
 }
 
 .tab__input{

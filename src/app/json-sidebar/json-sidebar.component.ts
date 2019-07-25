@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Injectable } from '@angular/core';
 import { DataService } from '../data.service';
 import { Subscription } from 'rxjs';
 import { DataFromForm } from '../main-form/formData';
@@ -6,6 +6,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Url } from 'url';
 import { Pipeline } from './Pipeline';
 import { viewClassName } from '@angular/compiler';
+import { HttpService } from '../http.service';
+
 
 
 @Component({
@@ -26,7 +28,7 @@ export class JsonSidebarComponent implements OnInit {
   fileUrl: Url;
 
 
-  constructor(private dataService: DataService, private sanitizer: DomSanitizer) {
+  constructor(private dataService: DataService, private sanitizer: DomSanitizer, private httpService: HttpService) {
     this.param = this.dataService.saveEvent.subscribe(data => {
       let lastData: DataFromForm = this.dataService.getData()[this.dataService.getData().length - 1];
       if (data == true) {
@@ -161,6 +163,10 @@ export class JsonSidebarComponent implements OnInit {
         reader.readAsText(input.files[index]);
     };
 }
+  postData(){
+    console.log(this.dataService.jsonToPrint);
+    this.httpService.postData(this.dataService.jsonToPrint);
+  }
 
 parseDataToUpload(text: string){
   let parseData = JSON.parse(`${text}`);

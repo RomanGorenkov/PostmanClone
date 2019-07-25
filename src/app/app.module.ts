@@ -16,6 +16,8 @@ import { MainFormTabComponent } from './main-form/main-form-tabs/main-form-tab/m
 import { JsonPreviewComponent } from './json-preview/json-preview.component';
 import { DataService } from './data.service';
 import { JsonSidebarComponent } from './json-sidebar/json-sidebar.component';
+import { HttpService } from './http.service';
+import { HttpClientModule } from '@angular/common/http';
 
 
 
@@ -36,9 +38,10 @@ import { JsonSidebarComponent } from './json-sidebar/json-sidebar.component';
     MatTabsModule,
     BrowserAnimationsModule,
     MatButtonModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    HttpClientModule
   ],
-  providers: [DataService],
+  providers: [DataService, HttpService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

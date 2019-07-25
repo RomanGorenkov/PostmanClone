@@ -117,6 +117,11 @@
 .sidebar__file-upload-button:hover{
   color: cornflowerblue;
 }
+
+.sidebar__file-post-button{
+  width: 100%;
+  margin: 5px 0;
+}
 .sidebar__pipline-title:hover{
   background-color: rgb(29, 28, 28);
 }

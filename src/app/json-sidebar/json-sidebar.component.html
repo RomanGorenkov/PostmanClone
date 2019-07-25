@@ -23,6 +23,7 @@
       <i class="file-upload-button_content fa fa-cloud-upload"></i> JSON Upload
     </label>
     <button type="button" class="sidebar__file-download-button btn btn-warning" (click)="saveJSON()">Save JSON</button>
+    <button type="button" class="sidebar__file-post-button btn btn-success" (click)="postData()">POST JSON</button>
     <a #downloadLink class="sidebar__download-link" [href]="fileUrl" download="file.txt">DownloadFile</a>
   </section>
 </div>

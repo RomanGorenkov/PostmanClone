@@ -178,7 +178,11 @@ parseDataToUpload(text: string){
       stages.urlParam = '?' + stages.url.split('?')[1];
       stages.index = index;
       stages.paramsArray = this.parseParamDataToUpload(stages.urlParam);
-      stages.hedersArray = this.parseHeaderDataToUpload(stages.header);
+      stages.hedersArray = this.parseHeaderDataToUpload(stages.header)
+      // if(stages.part_name == undefined){
+      //   console.log('+++');
+      //   stages.part_name == 'index';
+      // }
       this.dataService.addData(stages);
       return stages;
     })
@@ -192,6 +196,9 @@ parseDataToUpload(text: string){
 }
 
 parseParamDataToUpload(paramStr: string){
+  if(paramStr == '?undefined'){
+    return;
+  }
   let paramsArray = [];
   paramStr = paramStr.slice(1);
   let paramString: string = paramStr.split('&').join('=');

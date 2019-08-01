@@ -194,6 +194,9 @@ export class MainFormTabComponent implements OnInit {
   }
 
   uploadParamsData(dataToUpload: DataFromForm) {
+    if(dataToUpload.paramsArray == undefined){
+      return;
+    }
     this.trimFormRequestArrayByTemplate(dataToUpload.paramsArray);
     dataToUpload.paramsArray.map((keyValueLine, index: number) => {
       this.expandFormRequestArrayForWriting(index);
@@ -220,6 +223,9 @@ export class MainFormTabComponent implements OnInit {
   }
 
   trimFormRequestArrayByTemplate(template) {
+    if(template == undefined){
+      return;
+    }
     if (this.formRequestArray.length > template.length) {
       this.formRequestArray.removeAt(this.formRequestArray.length - (this.formRequestArray.length - template.length));
     }

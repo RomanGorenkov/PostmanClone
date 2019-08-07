@@ -2,27 +2,23 @@ import { DataFromForm } from './main-form/formData';
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
-export class DataService{
+export class DataService {
 
   private data: DataFromForm[] = [];
-  jsonToPrint: string = '';
   saveEvent: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  saveDataReady: BehaviorSubject<any> = new BehaviorSubject(0);
   loadEvent:BehaviorSubject<boolean> = new BehaviorSubject(false);
   getFullJson: BehaviorSubject<boolean> = new BehaviorSubject(false);
   activData: DataFromForm;
-  resave: boolean = false;
+
+  serverResponse;
+  response: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   getData(): DataFromForm[] {
     return this.data;
   }
+  
   addData(formData: DataFromForm){
     this.data.push(formData);
-  }
-
-  findJsonByIndex( jsonIndex: number ){
-    let jsonPart: string = this.data[jsonIndex].fullJSONpart;
-    this.jsonToPrint = jsonPart;
-    this.activData = this.data[jsonIndex];
-
   }
 }

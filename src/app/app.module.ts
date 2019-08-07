@@ -13,13 +13,16 @@ import { MatButtonModule, MatCheckboxModule } from '@angular/material';
 import 'hammerjs';
 import { MainFormTabsComponent } from './main-form/main-form-tabs/main-form-tabs.component';
 import { MainFormTabComponent } from './main-form/main-form-tabs/main-form-tab/main-form-tab.component';
-import { JsonPreviewComponent } from './json-preview/json-preview.component';
 import { DataService } from './data.service';
 import { JsonSidebarComponent } from './json-sidebar/json-sidebar.component';
 import { HttpService } from './http.service';
 import { HttpClientModule } from '@angular/common/http';
-
-
+import { MatTreeModule } from '@angular/material/tree';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { TestResultComponent } from './test-result/test-result.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -27,8 +30,8 @@ import { HttpClientModule } from '@angular/common/http';
     MainFormComponent,
     MainFormTabsComponent,
     MainFormTabComponent,
-    JsonPreviewComponent,
     JsonSidebarComponent,
+    TestResultComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,7 +42,12 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserAnimationsModule,
     MatButtonModule,
     MatCheckboxModule,
-    HttpClientModule
+    MatTreeModule,
+    HttpClientModule,
+    MatIconModule,
+    MatButtonToggleModule,
+    MatTableModule,
+    MatPaginatorModule
   ],
   providers: [DataService, HttpService],
   bootstrap: [AppComponent]

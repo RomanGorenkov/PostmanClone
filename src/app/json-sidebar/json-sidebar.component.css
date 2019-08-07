@@ -94,7 +94,6 @@
 
 .sidebar__download-link{
   margin: 5px 0;
-  visibility: hidden;
 }
 
 .sidebar__file-upload-input{
@@ -161,4 +160,10 @@
   background-color: rgb(27, 25, 25);
 }
 
+.pipeline_button {
+  background-color: rgb(197, 199, 199);
+  -webkit-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+}
 

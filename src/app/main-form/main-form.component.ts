@@ -49,21 +49,21 @@ export class MainFormComponent implements OnInit {
   }
 
   saveJSON() {
-    if (this.dataService.resave == false) {
-      let data = new DataFromForm();
-      data.urlNative = this.url.nativeElement.value;
-      data.method = this.method.nativeElement.value;
-      data.part_name = this.jsonName.nativeElement.value != '' ? this.jsonName.nativeElement.value : 'Name';
-      this.dataService.addData(data);
-      this.dataService.saveEvent.next(true);
-    } else{
+    //if (this.dataService.resave == false) {
+    let data = new DataFromForm();
+    data.urlNative = this.url.nativeElement.value;
+    data.method = this.method.nativeElement.value;
+    data.part_name = this.jsonName.nativeElement.value != '' ? this.jsonName.nativeElement.value : 'Name';
+    this.dataService.addData(data);
+    this.dataService.saveEvent.next(true);
+    /*} else{
       console.log("save");
       this.dataService.activData.method = this.method.nativeElement.value;
       this.dataService.activData.urlNative = this.url.nativeElement.value;
       this.dataService.activData.part_name = this.jsonName.nativeElement.value;
       this.dataService.saveEvent.next(true);
 
-    }
+    }*/
     // console.log(this.dataService.activData)
 
   }

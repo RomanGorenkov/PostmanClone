@@ -126,17 +126,15 @@ export class MainFormTabComponent implements OnInit {
         this.getAssertCode(dataForSave);
         this.getBodyData(dataForSave);
         this.getParamData(dataForSave);
+
+        this.dataService.saveDataReady.next(this.dataService.saveDataReady.getValue() + 1);
       }
     });
   }
 
   getDataForSave(){
     let dataForSave: DataFromForm;
-    if(this.dataService.resave == false){
-      dataForSave = this.dataService.getData()[this.dataService.getData().length - 1];
-    } else{
-      dataForSave = this.dataService.activData;
-    }
+    dataForSave = this.dataService.getData()[this.dataService.getData().length - 1];
     return dataForSave;
   }
 
@@ -194,7 +192,7 @@ export class MainFormTabComponent implements OnInit {
   }
 
   uploadParamsData(dataToUpload: DataFromForm) {
-    if(dataToUpload.paramsArray == undefined){
+    if (dataToUpload.paramsArray == undefined) {
       return;
     }
     this.trimFormRequestArrayByTemplate(dataToUpload.paramsArray);
@@ -207,23 +205,25 @@ export class MainFormTabComponent implements OnInit {
 
   uploadHeadersData(dataToUpload: DataFromForm) {
     this.trimFormRequestArrayByTemplate(dataToUpload.hedersArray);
-    dataToUpload.hedersArray.map((keyValueLine, index: number) => {
-      this.expandFormRequestArrayForWriting(index);
-      this.formRequestArray.get(`${index}`).get('requestKey').setValue(`${keyValueLine.requestKey}`);
-      this.formRequestArray.get(`${index}`).get('requestValue').setValue(`${keyValueLine.requestValue}`);
-    })
+    if (dataToUpload.hedersArray) {
+      dataToUpload.hedersArray.map((keyValueLine, index: number) => {
+        this.expandFormRequestArrayForWriting(index);
+        this.formRequestArray.get(`${index}`).get('requestKey').setValue(`${keyValueLine.requestKey}`);
+        this.formRequestArray.get(`${index}`).get('requestValue').setValue(`${keyValueLine.requestValue}`);
+      })
+    }
   }
 
-  uploadBodyData(dataToUpload: DataFromForm){
+  uploadBodyData(dataToUpload: DataFromForm) {
     this.bodyData.nativeElement.value = dataToUpload.data;
   }
 
-  uploadTestData(dataToUpload: DataFromForm){
+  uploadTestData(dataToUpload: DataFromForm) {
     this.assertCode.nativeElement.value = dataToUpload.assert_code;
   }
 
   trimFormRequestArrayByTemplate(template) {
-    if(template == undefined){
+    if (template == undefined) {
       return;
     }
     if (this.formRequestArray.length > template.length) {

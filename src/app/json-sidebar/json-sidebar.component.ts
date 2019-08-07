@@ -1,14 +1,26 @@
-import { Component, OnInit, ViewChild, ElementRef, Injectable } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { DataService } from '../data.service';
 import { Subscription } from 'rxjs';
 import { DataFromForm } from '../main-form/formData';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Url } from 'url';
 import { Pipeline } from './Pipeline';
-import { viewClassName } from '@angular/compiler';
 import { HttpService } from '../http.service';
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { MatTreeFlattener, MatTreeFlatDataSource } from '@angular/material/tree';
 
+export class PipelineNode {
+  id: string;
+  name: string;
+  children?: PipelineNode[];
+}
 
+export class ExampleFlatNode {
+  id: string;
+  expandable: boolean;
+  name: string;
+  level: number;
+}
 
 @Component({
   selector: 'app-json-sidebar',
@@ -17,28 +29,59 @@ import { HttpService } from '../http.service';
 })
 export class JsonSidebarComponent implements OnInit {
 
-  @ViewChild('pipelineName', { static: false }) pipelineName: ElementRef;
-  @ViewChild('pipelineList', { static: false }) pipelineList: ElementRef;
-  @ViewChild('jsonParts', { static: false }) jsonList: ElementRef;
-  @ViewChild('downloadLink', { static: false }) downloadLink: ElementRef;
+  PIPELINE_DATA: PipelineNode[] = [];
 
+  private _transformer = (node: PipelineNode, level: number) => {
+    console.log(this.nestedNodeMap)
+    let flatNode = this.nestedNodeMap.has(node) && this.nestedNodeMap.get(node)!.id === node.id
+      ? this.nestedNodeMap.get(node)!
+      : new ExampleFlatNode();
+
+    flatNode.id = node.id;
+    flatNode.name = node.name;
+    flatNode.level = level;
+    flatNode.expandable = !!node.children;
+    this.flatNodeMap.set(flatNode, node);
+    this.nestedNodeMap.set(node, flatNode);
+
+    return flatNode;
+  }
+
+  selectedNode: ExampleFlatNode;
   param: Subscription;
-  pipelineArray: Pipeline[] = [];
-  jsonArray: DataFromForm[] = [];
   fileUrl: Url;
+  pipelineName: string;
 
+  treeControl = new FlatTreeControl<ExampleFlatNode>(node => node.level, node => node.expandable);
+  treeFlattener = new MatTreeFlattener(this._transformer, node => node.level, node => node.expandable, node => node.children);
+  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+  pipelineArray: Map<ExampleFlatNode, Pipeline> = new Map<ExampleFlatNode, Pipeline>();
+  flatNodeMap: Map<ExampleFlatNode, PipelineNode> = new Map<ExampleFlatNode, PipelineNode>();
+  nestedNodeMap: Map<PipelineNode, ExampleFlatNode> = new Map<PipelineNode, ExampleFlatNode>();
+
+  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   constructor(private dataService: DataService, private sanitizer: DomSanitizer, private httpService: HttpService) {
-    this.param = this.dataService.saveEvent.subscribe(data => {
-      let lastData: DataFromForm = this.dataService.getData()[this.dataService.getData().length - 1];
-      if (data == true) {
-        setTimeout(() => {
-          if (this.dataService.resave == false) {
-            let activePipelineIndex = this.findeActivPipelineIndex();
-            lastData.index = this.jsonArray.length;
-            this.pipelineArray[activePipelineIndex].stages.push(lastData);
-          }
-        }, 11);
+    this.dataSource.data = [];
+    this.param = this.dataService.saveDataReady.subscribe(data => {
+      if (data == 4) {
+        this.dataService.saveDataReady.next(0);
+        let lastData: DataFromForm = this.dataService.getData()[this.dataService.getData().length - 1];
+        console.log(lastData)
+        if (this.selectedNode.level == 0) {
+          const child = <PipelineNode>{ 'name': lastData.part_name, 'id': this.generateId() };
+          let parentNode = this.flatNodeMap.get(this.selectedNode);
+          parentNode.children.push(child)
+          this.dataSource.data = this.PIPELINE_DATA;
+
+          const newNodeData = <Pipeline>{ 'data': lastData, 'pipeline': this.selectedNode.name };
+          let qwe = this.nestedNodeMap.get(child)
+          this.pipelineArray.set(qwe, newNodeData);
+        } else {
+          this.setByKey(this.pipelineArray, this.selectedNode.id, lastData);
+          console.log(this.pipelineArray)
+        }
       }
     });
   }
@@ -46,56 +89,33 @@ export class JsonSidebarComponent implements OnInit {
   ngOnInit() {
   }
 
-  printJSON(index: number) {
-    this.dataService.resave = true;
-    let jsonPart = event.srcElement as HTMLElement;
-    // jsonPart.parentElement.classList.add('active-json');
-    let activePipelineIndex = this.findeActivPipelineIndex();
-    this.disableJsonPart(jsonPart);
-    this.dataService.activData = this.pipelineArray[activePipelineIndex].stages[index];
-    this.dataService.jsonToPrint = this.pipelineArray[activePipelineIndex].stages[index].fullJSONpart;
-    this.dataService.loadEvent.next(true);
-  }
-
-  disableJsonPart(target: HTMLElement) {
-    if (target.parentElement.querySelector('.active-json')) {
-      if(target.parentElement.querySelector('.active-json') == target){
-        target.parentElement.querySelector('.active-json').classList.remove('active-json');
-        this.dataService.resave = false;
-        return;
-      } else{
-        target.parentElement.querySelector('.active-json').classList.remove('active-json');
-        target.classList.add('active-json');
-      }
-    } else{
-      target.classList.add('active-json');
-    }
+  generateId() {
+    let r = Math.random().toString(36).substring(7);
+    return r;
   }
 
   saveJSON() {
     let fullJSON = this.creatJSONString();
-    fullJSON = this.convertStringToJSON(fullJSON);
+    console.log(fullJSON)
+    /*fullJSON = this.convertStringToJSON(fullJSON);
     this.creatJSONToDownload(fullJSON);
     this.dataService.jsonToPrint = fullJSON;
-    this.dataService.getFullJson.next(true);
+    this.dataService.getFullJson.next(true);*/
   }
 
   creatJSONString() {
-    let fullJSON: string = `{\n\t"tests":[`;
-    this.pipelineArray.map(pipeline => {
-      fullJSON = fullJSON + `{
-          "pipeline":"${pipeline.pipeline}",
-           "stages":[\n`;
-      pipeline.stages.map(jsonPart => {
-        fullJSON = fullJSON + `${jsonPart.fullJSONpart},\n`;
-      })
-      if (pipeline.stages.length == 0) {
-        fullJSON = fullJSON + ']\n},\n';
-      } else {
-        fullJSON = fullJSON.slice(0, -2) + ']\n},\n';
-      }
+    console.log('pipeline array', this.pipelineArray)
+    let fullJSON: string = `{"tests":[`;
+    this.pipelineArray.forEach((key, value) => {
+      console.log(key, value)
+      fullJSON = fullJSON + `{"pipeline":"${key.pipeline}", "stages":[`;
+      fullJSON = fullJSON + `{"part_name": "${key.data.part_name}","url": "${key.data.urlNative}","method": "${key.data.method}", "header": "${key.data.header}", "data": "${key.data.data}", "assert_code": ${key.data.assert_code}},`
+      fullJSON = fullJSON.slice(0, -1) + ']},';
     })
-    fullJSON = fullJSON.slice(0, -5) + "\n]\n}\n]\n}";
+    fullJSON = fullJSON.slice(0, -1) + "]}";
+
+    console.log(fullJSON)
+
     return fullJSON;
   }
 
@@ -105,132 +125,92 @@ export class JsonSidebarComponent implements OnInit {
     return fullJSON;
   }
 
-  creatJSONToDownload(fullJSON) {
-    const data = fullJSON;
-    const blob = new Blob([data], { type: 'application/octet-stream' });
+  creatJSONToDownload() {
+    //const data = this.creatJSONString();
+    console.log('to file', this.nestedNodeMap)
+    const data = {
+      'PIPELINE_DATA': this.PIPELINE_DATA,
+      'pipelineArray': Array.from(this.pipelineArray.entries()),
+      'flatNodeMap': Array.from(this.flatNodeMap.entries()),
+      'nestedNodeMap': Array.from(this.nestedNodeMap.entries())
+    };
+    console.log(JSON.stringify(data))
+    const blob = new Blob([JSON.stringify(data)], { type: 'application/octet-stream' });
     this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
-    this.downloadLink.nativeElement.style.visibility = 'visible';
+  }
+
+  setByKey(data, id, newData) {
+    data.forEach((value, key) => {
+      if (key.id === id) {
+        data.get(key).data = newData
+      }
+    })
+  }
+
+  getByKey(data, id) {
+    let result;
+    data.forEach((value, key) => {
+      if (key.id === id) {
+        result = value;
+      }
+    })
+
+    return result;
+  }
+
+  pipelineClick(node) {
+    console.log(node);
+    console.log(this.pipelineArray);
+    if (node.level == 1) {
+      console.log('return', this.getByKey(this.pipelineArray, node.id))
+      this.printJSON(this.getByKey(this.pipelineArray, node.id).data);
+    } else {
+      this.printJSON(new DataFromForm())
+    }
+    this.selectedNode = node;
   }
 
   addPipeline() {
-    this.pipelineArray.push(new Pipeline(this.pipelineName.nativeElement.value, this.pipelineArray.length));
-  }
-
-  choosePipeline($event, index: number) {
-    let selectedPipeline = event.srcElement as HTMLElement;
-    if (selectedPipeline.parentElement.classList.contains('active-pipeline')) {
-      this.disablePipelines();
-      return;
-    }
-    if (selectedPipeline.classList.contains('sidebar__pipline-title')) {
-      if (this.pipelineList.nativeElement.querySelector('.active-pipeline')) {
-        this.disablePipelines();
-      }
-      this.enablePipeline(selectedPipeline, index);
-      this.dataService.resave = false;
-    }
-  }
-
-  disablePipelines() {
-    this.pipelineList.nativeElement.querySelector('.active-pipeline').classList.remove('active-pipeline');
-    for (let i = 0; i < this.pipelineArray.length; i++) {
-      this.pipelineArray[i].tabStatus = 'disable';
-    }
-  }
-
-  enablePipeline(selectedPipeline: HTMLElement, index: number) {
-    selectedPipeline.parentElement.classList.add('active-pipeline');
-    this.pipelineArray[index].tabStatus = 'active';
-    this.jsonArray = this.pipelineArray[index].stages;
-  }
-
-  findeActivPipelineIndex() {
-    for (let i = 0; i < this.pipelineArray.length; i++) {
-      if (this.pipelineArray[i].tabStatus == 'active') {
-        return i;
-      }
-    }
+    let node = {} as PipelineNode;
+    node.id = this.generateId();
+    node.name = this.pipelineName;
+    node.children = [];
+    this.PIPELINE_DATA.push(node);
+    this.dataSource.data = this.PIPELINE_DATA;
+    this.pipelineName = '';
   }
 
   openFile(event) {
+    console.log(event.target)
     let input = event.target;
     for (let index = 0; index < input.files.length; index++) {
-        let reader = new FileReader();
-        reader.onload = () => {
-            let text = reader.result;
-            this.pipelineArray = this.parseDataToUpload(`${text}`);
-        }
-        reader.readAsText(input.files[index]);
+      let reader = new FileReader();
+      reader.onload = () => {
+        let text = reader.result;
+        let data = JSON.parse(text.toString())
+        console.log(data.nestedNodeMap)
+        this.nestedNodeMap = new Map(data.nestedNodeMap);
+        this.PIPELINE_DATA = data.PIPELINE_DATA;
+        this.pipelineArray = new Map(data.pipelineArray);
+        this.flatNodeMap = new Map(data.flatNodeMap);
+        this.dataSource.data = this.PIPELINE_DATA;
+        //this.pipelineArray = this.parseDataToUpload(`${text}`);
+        console.log(this.nestedNodeMap)
+      }
+      reader.readAsText(input.files[index]);
     };
-}
-  postData(){
-    console.log(this.dataService.jsonToPrint);
-    this.httpService.postData(this.dataService.jsonToPrint);
+  }
+  postData() {
+    let data = this.creatJSONString();
+    this.httpService.postData(this.creatJSONString()).subscribe(response => {
+      this.dataService.serverResponse = response;
+      this.dataService.response.next(true);
+    });
   }
 
-parseDataToUpload(text: string){
-  let parseData = JSON.parse(`${text}`);
-  parseData.tests.forEach( (pipeline, index: number) =>{
-    let validPipeline = new Pipeline(pipeline.pipeline, index);
-    pipeline.stages.forEach( (stages, index: number) => {
-      stages.fullJSONpart = JSON.stringify(stages, null, 4);
-      stages.urlNative = stages.url.split('?')[0];
-      stages.urlParam = '?' + stages.url.split('?')[1];
-      stages.index = index;
-      stages.paramsArray = this.parseParamDataToUpload(stages.urlParam);
-      stages.hedersArray = this.parseHeaderDataToUpload(stages.header)
-      // if(stages.part_name == undefined){
-      //   console.log('+++');
-      //   stages.part_name == 'index';
-      // }
-      this.dataService.addData(stages);
-      return stages;
-    })
-
-    validPipeline.index = index;
-    validPipeline.tabStatus = 'disable';
-    validPipeline.stages = pipeline.stages;
-    return validPipeline;
-  })
-  return parseData.tests;
-}
-
-parseParamDataToUpload(paramStr: string){
-  if(paramStr == '?undefined'){
-    return;
+  printJSON(data) {
+    this.dataService.activData = data;
+    this.dataService.loadEvent.next(true);
   }
-  let paramsArray = [];
-  paramStr = paramStr.slice(1);
-  let paramString: string = paramStr.split('&').join('=');
-  let paramStringArray: string[] = paramString.split('=');
-  let requestKeyArray: string[] = paramStringArray.filter( (item, index) => {
-    return index % 2 == 0;
-  });
-  let requestValue: string[]= paramStringArray.filter( (item, index) => {
-    return index % 2 == 1;
-  });
-
-  for( let index: number = 0; index < requestKeyArray.length; index++){
-    paramsArray.push({requestKey: `${requestKeyArray[index]}`, requestValue: `${requestValue[index]}`});
-  }
-  return paramsArray;
 }
 
-parseHeaderDataToUpload(headerDataStr: string){
-  let paramsArray = [];
-  headerDataStr = headerDataStr.slice(2).slice(0,-2);
-  let headerString: string = headerDataStr.split("','").join("': '");
-  let headerStringArray: string[] = headerString.split("': '");
-  let requestKeyArray: string[] = headerStringArray.filter( (item, index) => {
-    return index % 2 == 0;
-  });
-  let requestValue: string[]= headerStringArray.filter( (item, index) => {
-    return index % 2 == 1;
-  });
-
-  for( let index: number = 0; index < requestKeyArray.length; index++){
-    paramsArray.push({requestKey: `${requestKeyArray[index]}`, requestValue: `${requestValue[index]}`});
-  }
-  return paramsArray;
-}
-}

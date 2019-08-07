@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -8,11 +8,9 @@ export class HttpService{
 
     constructor(private http: HttpClient){ }
 
-    //http://localhost:60489/Home/PostUser  ASP.NET Core MVC
-    //http://localhost:8080/angular/setUser.php     PHP
-
     postData(data: string){
-
-        return this.http.post('http://localhost:60489/Home/PostUser', data);
+      let headers = new HttpHeaders().set('Content-Type', 'application/json');
+      let options = {headers: headers};   
+      return this.http.post('http://192.168.142.211:5000/api/list', JSON.parse(data), options);
     }
 }

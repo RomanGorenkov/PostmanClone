@@ -1,29 +1,29 @@
 <div class="sidebar-container">
-  <h2 class="sidebar__title">JSON parts</h2>
+  <h2 class="sidebar__title">Pipilines</h2>
   <section class="sidebar__folder-creator">
-    <input #pipelineName class="folder-creator__name-input" placeholder="Pipeline name" />
-    <button #addButton type="button" class="folder-creator__add-button btn btn-secondary btn-block"
+    <input [(ngModel)]="pipelineName" class="folder-creator__name-input" placeholder="Pipeline name" />
+    <button type="button" class="folder-creator__add-button btn btn-secondary btn-block"
       (click)=addPipeline()>Add</button>
   </section>
   <section class="sidebar__jsons-container">
-    <ul #pipelineList class="sidebar__jsons-pipelines-list">
-      <li #pipelineItem class="sidebar__jsons-pipeline" *ngFor="let pipeline of pipelineArray; let i = index"
-        (click)=choosePipeline($event.target,i)><span class="sidebar__pipline-title">{{pipeline.pipeline}}</span>
-        <ul #jsonParts class="sidebar__jsons-list">
-          <li class="sidebar__jsons-item sidebar__list-item" *ngFor="let json of jsonArray; let i = index"
-            (click)="printJSON(i)">{{json.part_name}}</li>
-        </ul>
-      </li>
-    </ul>
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+      <mat-tree-node *matTreeNodeDef="let node;" matTreeNodePadding (click)='pipelineClick(node)' [ngClass]="{'pipeline_button': node == selectedNode}">
+        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+          <mat-icon class="mat-icon-rtl-mirror">
+            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+          </mat-icon>
+        </button>
+        {{node.name}}
+      </mat-tree-node>
+    </mat-tree>
 
   </section>
   <section class="sidebar__controls-container">
     <label class="sidebar__file-upload-button">
-      <input class="sidebar__file-upload-input" type="file" accept='text/plain' multiple (change)='openFile($event)'/>
+      <input class="sidebar__file-upload-input" type="file" accept='text/plain' multiple (change)='openFile($event)' />
       <i class="file-upload-button_content fa fa-cloud-upload"></i> JSON Upload
     </label>
-    <button type="button" class="sidebar__file-download-button btn btn-warning" (click)="saveJSON()">Save JSON</button>
     <button type="button" class="sidebar__file-post-button btn btn-success" (click)="postData()">POST JSON</button>
-    <a #downloadLink class="sidebar__download-link" [href]="fileUrl" download="file.txt">DownloadFile</a>
+    <a #downloadLink class="sidebar__download-link" (click)='creatJSONToDownload()' [href]="fileUrl" download="file.txt">DownloadFile</a>
   </section>
 </div>

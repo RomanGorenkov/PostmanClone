@@ -30,6 +30,7 @@ export class ExampleFlatNode {
 export class JsonSidebarComponent implements OnInit {
 
   PIPELINE_DATA: PipelineNode[] = [];
+  clicked: boolean = false;
 
   private _transformer = (node: PipelineNode, level: number) => {
     console.log(this.nestedNodeMap)
@@ -147,6 +148,14 @@ export class JsonSidebarComponent implements OnInit {
     })
   }
 
+  deleteByKey(data, id) {
+    data.forEach((value, key) => {
+      if (key.id === id) {
+        data.delete(key);
+      }
+    })
+  }
+
   getByKey(data, id) {
     let result;
     data.forEach((value, key) => {
@@ -158,16 +167,41 @@ export class JsonSidebarComponent implements OnInit {
     return result;
   }
 
+  remove(node) {
+    this.clicked = true;
+    let i = 0;
+    this.PIPELINE_DATA.forEach(data => {
+      if(data.id == node.id) {
+        this.PIPELINE_DATA.splice(i, 1);
+      }
+      i++;
+    })
+    this.dataSource.data = this.PIPELINE_DATA;
+    console.log(this.pipelineArray)
+    this.getByKey(this.flatNodeMap, node.id).children.forEach(element => {
+      this.deleteByKey(this.pipelineArray, element.id);
+      console.log(element.id)
+      console.log(node.id)
+      this.deleteByKey(this.nestedNodeMap, node.id);
+      this.deleteByKey(this.nestedNodeMap, element.id);
+      this.deleteByKey(this.flatNodeMap, node.id);
+      this.deleteByKey(this.flatNodeMap, element.id);
+    });
+    console.log(this.nestedNodeMap)
+    console.log(this.flatNodeMap)
+  }
+
   pipelineClick(node) {
-    console.log(node);
-    console.log(this.pipelineArray);
-    if (node.level == 1) {
-      console.log('return', this.getByKey(this.pipelineArray, node.id))
-      this.printJSON(this.getByKey(this.pipelineArray, node.id).data);
-    } else {
-      this.printJSON(new DataFromForm())
+    if (!this.clicked) {
+      if (node.level == 1) {
+        console.log('return', this.getByKey(this.pipelineArray, node.id))
+        this.printJSON(this.getByKey(this.pipelineArray, node.id).data);
+      } else {
+        this.printJSON(new DataFromForm())
+      }
+      this.selectedNode = node;
     }
-    this.selectedNode = node;
+    this.clicked = false;
   }
 
   addPipeline() {
